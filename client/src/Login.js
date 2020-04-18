@@ -15,18 +15,27 @@ export default class Login extends Component {
       [name]: value
     });
   }
+  /*
   onSubmit = (event) => {
     event.preventDefault();
-    fetch('/api/authenticate', {
+    $.ajax({
+      type:'post',
+      url: '/api/authenticate',
+      data: JSON.stringify(this.state),
+      success: function(output, status, xhr){
+        alert(xhr.getResponseHeader('Set-Cookie'));
+      }})};*/
+
+
+ onSubmit = (event) => {
+      event.preventDefault();  
+      fetch('/api/authenticate', {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'same-origin',
         body: JSON.stringify(this.state),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:3000',
-          'Access-Control-Allow-Credentials':'true'
-
         }
       })
       .then(res => {

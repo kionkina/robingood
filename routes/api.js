@@ -62,7 +62,7 @@ router.post('/authenticate', function(req, res) {
             });
             console.log("token:" + token);
             console.log("ADDING COOKIE TO RES!");
-            res.cookie('userCookie', {token:token,  httpOnly: true });
+            res.cookie('token', token,  {httpOnly: false });
 
             res.sendStatus(200);
           }

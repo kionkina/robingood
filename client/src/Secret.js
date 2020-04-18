@@ -18,6 +18,7 @@ export default class Secret extends React.Component {
     return (
       <div>
         <h1>Home</h1>
+        <h2>This page is only accessible with an auth jwt token!</h2>
         <p>{this.state.message}</p>
       </div>
     );

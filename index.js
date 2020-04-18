@@ -29,9 +29,7 @@ app.use(bodyParser.json());
 app.use('/api', routes);
 
 app.use(cookieParser());
-app.get('/', (req, res, next)){
-    
-}
+
 app.use((err, req, res, next) => {
   console.log(err);
   next();
