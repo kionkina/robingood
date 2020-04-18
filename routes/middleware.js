@@ -6,10 +6,11 @@ const withAuth = function(req, res, next) {
   console.log("--------------------------------------");
   //parsing for string after 'token= '
   const rawCookie = req.headers.cookie;
+  console.log("cookie:");
+  console.log(rawCookie);
   //parsing raw cookie to find jwt token
-  var rawCookieParams = rawCookie.split(";");
-  var rawCookieNameAndValue = rawCookieParams[1].split("=");
-  var token = rawCookieNameAndValue[1];
+  var rawCookieParams = rawCookie.split("=");
+  var token = rawCookieParams[1];
   console.log("TOKEN IN MIDDLEWARE IS");
   console.log(token);
   if (!token) {
