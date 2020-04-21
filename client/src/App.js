@@ -1,25 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import Home from './components/Home';
+import Register from './components/Register'
 import './App.css';
-import Login from './Login';
-import { Switch, Route, withRouter, Link } from 'react-router-dom';
-import withAuth from './withAuth';
-import Secret from './Secret';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 class App extends React.Component{
  
   render (){
     return (
-    <div className="App">
-      <Link to="/login">Login</Link>
-      <Link to="/secret"> Token-Protected Link </Link>
-      <Switch>
-       <Route path="/Login" component={Login} />
-       <Route path="/secret" component={withAuth(Secret)} />
-       </Switch>
-    </div>
+    <Router>
+      <Navbar/>
+      <Route exact path="/" component={Home}/>
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+    </Router>
     );
   }
 }
 
-export default withRouter(App);
+export default App;

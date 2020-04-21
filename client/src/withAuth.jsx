@@ -11,7 +11,7 @@ export default function withAuth(ComponentToProtect) {
       };
     }
     componentDidMount() {
-      console.log("about to fecth...");
+      console.log("about to fetch...");
       axios.get('/api/checkToken')
         .then(res => {
           if (res.status === 200) {

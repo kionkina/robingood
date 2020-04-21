@@ -1,38 +1,144 @@
-.App {
-  text-align: center;
+.news{
+  height: 45em;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.custom-col {
+  height: 45em;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.balance-row{
+  height: 15em;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.user-stocks-row{
+  height: 30em;
 }
-
-.App-link {
-  color: #61dafb;
+.user-stocks{
+  width:30em;
+  height:95%;
 }
+.hot-stocks{
+  width: 30em;
+  height:45em;
+  height:96.5%;
+}
+.hot-stocks-row{
+  height:100%;
+}
+.news-card{
+  width: 64.8em;
+}
+.balance{
+  width: 30em;
+  height: 95%;
+  border: solid 2px #2EBE33;
+  border-radius: 1em;
+}
+.balance-row{
+  height:33.33%;
+}
+.portfolio-val{
+  font-size: 36px;
+  font-weight: bold;
+  color: #2EBE33;
+}
+.percent{
+  font-size: 18px;
+  font-weight: bold;
+  color: #2EBE33;
+  margin-left: -0.7em;
+}
+.bi{
+  margin-bottom: 0.2em !important;
+}
+.customForm{
+  width: auto !important;
+  float: right !important;
+  display: inline !important;
+}
+.buying-pow{
+  font-size: 36px;
+  font-weight: bold;
+  color: #707070;
+}
+.portfolio-graph{
+  width:100%;
+  height: 1.45em;
+  margin:auto;
+  margin-top:0.5em;
+}
+.companyA{
+  text-align:center;
+  padding-top:2px;
+  font-size:12px;
+  color:#FFF;
+  font-weight:bold;
+  border-radius: 10px 0px 0px 10px;
+  background-color: #3396EC;
+}
+.companyB{
+  text-align:center;
+  padding-top:2px;
+  font-size:12px;
+  color:#FFF;
+  font-weight:bold;
+  background-color: #E27A7A;
+}
+.companyC{
+  text-align:center;
+  padding-top:2px;
+  font-size:12px;
+  color:#FFF;
+  font-weight:bold;
+  border-radius: 0px 10px 10px 0px;
+  background-color: #F8B471;
+}
+.stock-container-g{
+  border: solid 2px #2EBE33;
+  border-radius: 1em;
+  height: 90%;
+}
+.stock-container-g:hover{
+  background-color: #f5fff5;
+  cursor: pointer;
+}
+.stock-container-r{
+  border: solid 2px #BE2E2E;
+  border-radius: 1em;
+  height: 90%;
+}
+.stock-container-r:hover{
+  background-color: #fff4f4;
+  cursor: pointer;
+}
+.container-wrapper{
+  height: 11em;
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+}
+.stock-row{
+  height:50%;
+}
+.stock-heading{
+  color:#707070;
+  font-size: 12px
+}
+.stock-name{
+  font-size: 32px;
+  font-weight: bold;
+  color:#707070;
+}
+.stock-data{
+  padding-top:0.7em;
+  font-size: 18px;
+}
+.stock-data-g{
+  color: #2EBE33;
+  padding-top:0.7em;
+  font-size: 18px;
+}
+.stock-data-r{
+  color: #BE2E2E;
+  padding-top:0.7em;
+  font-size: 18px;
+}
+.wrapper{
+  height:100%;
+  padding: 5px 5px;
 }
