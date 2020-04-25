@@ -51,7 +51,7 @@ const Register = props=>{
             <form onSubmit={onSubmit}>
                 <h3>Please Register</h3>
                 <label htmlFor="email" className="sr-only">Email: </label>
-                <input type="text" 
+                <input type="email" 
                        name="email" 
                        value={user.email}
                        onChange={onChange} 
