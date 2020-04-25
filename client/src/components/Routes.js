@@ -4,12 +4,12 @@ import Login from './Login';
 import Home from './Home';
 import Landing from './Landing';
 import Register from './Register';
-import {Redirect, BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import AuthService from '../services/AuthService';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Routes = props =>{
-    const {isAuthenticated,user,setIsAuthenticated,setUser} = useContext(AuthContext);
+    const {isAuthenticated} = useContext(AuthContext);
+    //const {isAuthenticated,user,setIsAuthenticated,setUser} = useContext(AuthContext);
     
     return(
         <div>

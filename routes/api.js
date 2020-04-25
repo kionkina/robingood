@@ -14,9 +14,9 @@ router.post('/register', function(req, res) {
   user.save(function(err) {
     if (err) {
       res.status(500)
-        .json({message: "Error registering new user please try again."});
+        .json({message: {msgError: true, msgBody: "Error registering new user please try again."}});
     } else {
-      res.status(200).json({message: "Successfully registered!"});
+      res.status(200).json({message: {msgError: false, msgBody:"Successfully registered!"}});
     }
   });
 });
@@ -29,31 +29,30 @@ and verify that the given password is correct
 If pass is correct, we issue a signed token to the requester
 */
 router.post('/login', function(req, res) {
-    const email = req.body.email
-    const password = req.body.password
+    const {email, password} = req.body
     User.findOne({ email }, function(err, user) {
       if (err) {
         console.error(err);
         res.status(500)
           .json({
-          error: 'Internal error please try again'
+          message: {msgError: true, msgBody: 'Internal error please try again'}
         });
       } else if (!user) {
         res.status(401)
           .json({
-            error: 'Incorrect email or password'
+            message: {msgError: true, msgBody: 'Incorrect email or password'}
           });
       } else {
         user.isCorrectPassword(password, function(err, same) {
           if (err) {
             res.status(500)
               .json({
-                error: 'Internal error please try again'
+                message: {msgError: true, msgBody: 'Internal error please try again'}
             });
           } else if (!same) {
             res.status(401)
               .json({
-                error: 'Incorrect email or password'
+                message: {msgError: true, msgBody: 'Incorrect email or password'}
             });
           } else {
             // issue a signed token to the requester
@@ -69,7 +68,7 @@ router.post('/login', function(req, res) {
             .json({
               isAuthenticated: true,
               user: user,
-              message: "logged in!"
+              message: {msgError: false, msgBody: "Success"}
             });
           }
         });
@@ -80,9 +79,7 @@ router.post('/login', function(req, res) {
 
   router.post('/logout', function(req, res) {
     res.status(200)
-    .json({
-      isAuthenticated: true,
-    });
+    .json({});
   })
 
   /*
