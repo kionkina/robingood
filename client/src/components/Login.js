@@ -4,7 +4,7 @@ import Message from '../components/Message';
 import {AuthContext} from '../context/AuthContext';
 
 const Login = props=>{
-    const [user,setUser] = useState({username: "", password : ""});
+    const [user,setUser] = useState({email: "", password : ""});
     const [message,setMessage] = useState(null);
     const authContext = useContext(AuthContext);
 
@@ -27,24 +27,33 @@ const Login = props=>{
         });
     }
 
-
+    const showPass = () => {
+        var pass = document.getElementById("password");
+        if (pass.type === "password") {
+          pass.type = "text";
+        } else {
+          pass.type = "password";
+        }
+      }
 
     return(
         <div>
             <form onSubmit={onSubmit}>
                 <h3>Please sign in</h3>
-                <label htmlFor="username" className="sr-only">Username: </label>
-                <input type="text" 
-                       name="username" 
+                <label htmlFor="email" className="sr-only">Email: </label>
+                <input type="email" 
+                       name="email" 
                        onChange={onChange} 
                        className="form-control" 
-                       placeholder="Enter Username"/>
+                       placeholder="Enter Email"/>
                 <label htmlFor="password" className="sr-only">Password: </label>
                 <input type="password" 
+                       id="password"
                        name="password" 
                        onChange={onChange} 
                        className="form-control" 
                        placeholder="Enter Password"/>
+                <input type="checkbox" onClick={showPass}></input><label for='show-password'>Show Password</label>
                 <button className="btn btn-lg btn-primary btn-block" 
                         type="submit">Log in </button>
             </form>

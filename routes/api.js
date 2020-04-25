@@ -14,9 +14,9 @@ router.post('/register', function(req, res) {
   user.save(function(err) {
     if (err) {
       res.status(500)
-        .send("Error registering new user please try again.");
+        .json({message: {msgError: true, msgBody: "Error registering new user please try again."}});
     } else {
-      res.status(200).send("Welcome to the club!");
+      res.status(200).json({message: {msgError: false, msgBody:"Successfully registered!"}});
     }
   });
 });
@@ -28,48 +28,59 @@ finds a User with the given email
 and verify that the given password is correct
 If pass is correct, we issue a signed token to the requester
 */
-router.post('/authenticate', function(req, res) {
-    const { email, password } = req.body;
+router.post('/login', function(req, res) {
+    const {email, password} = req.body
     User.findOne({ email }, function(err, user) {
       if (err) {
         console.error(err);
         res.status(500)
           .json({
-          error: 'Internal error please try again'
+          message: {msgError: true, msgBody: 'Internal error please try again'}
         });
       } else if (!user) {
         res.status(401)
           .json({
-            error: 'Incorrect email or password'
+            message: {msgError: true, msgBody: 'Incorrect email or password'}
           });
       } else {
         user.isCorrectPassword(password, function(err, same) {
           if (err) {
             res.status(500)
               .json({
-                error: 'Internal error please try again'
+                message: {msgError: true, msgBody: 'Internal error please try again'}
             });
           } else if (!same) {
             res.status(401)
               .json({
-                error: 'Incorrect email or password'
+                message: {msgError: true, msgBody: 'Incorrect email or password'}
             });
           } else {
             // issue a signed token to the requester
-            const payload = { email };
-            const token = jwt.sign(payload, secret, {
-              expiresIn: '1h'
-            });
-            console.log("token:" + token);
-            console.log("ADDING COOKIE TO RES!");
-            res.cookie('token', token,  {httpOnly: false });
+            // const payload = { email };
+            // const token = jwt.sign(payload, secret, {
+            //   expiresIn: '1h'
+            // });
+            // console.log("token:" + token);
+            // console.log("ADDING COOKIE TO RES!");
+            // res.cookie('token', token,  {httpOnly: false });
 
-            res.sendStatus(200);
+            res.status(200)
+            .json({
+              isAuthenticated: true,
+              user: user,
+              message: {msgError: false, msgBody: "Success"}
+            });
           }
         });
       }
     });
   });
+
+
+  router.post('/logout', function(req, res) {
+    res.status(200)
+    .json({});
+  })
 
   /*
 router.get('/secret', withAuth, function(req, res) {
@@ -77,11 +88,11 @@ router.get('/secret', withAuth, function(req, res) {
   });
   */
 
-router.get('/checkToken', withAuth, function(req, res) {
-  console.log("CHECKING TOKEN...");
+// router.get('/checkToken', withAuth, function(req, res) {
+//   console.log("CHECKING TOKEN...");
 
-    res.sendStatus(200);
-});
+//     res.sendStatus(200);
+// });
 
 
 

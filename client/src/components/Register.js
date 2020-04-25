@@ -3,7 +3,7 @@ import AuthService from '../services/AuthService';
 import Message from '../components/Message';
 
 const Register = props=>{
-    const [user,setUser] = useState({username: "", password : "", role : ""});
+    const [user,setUser] = useState({email: "", password : "", role : ""});
     const [message,setMessage] = useState(null);
     let timerID = useRef(null);
 
@@ -18,8 +18,17 @@ const Register = props=>{
     }
 
     const resetForm = ()=>{
-        setUser({username : "", password : "",role : ""});
+        setUser({email : "", password : "",role : ""});
     }
+
+    const showPass = () => {
+        var pass = document.getElementById("password");
+        if (pass.type === "password") {
+          pass.type = "text";
+        } else {
+          pass.type = "password";
+        }
+      }
 
     const onSubmit = e =>{
         e.preventDefault();
@@ -41,27 +50,29 @@ const Register = props=>{
         <div>
             <form onSubmit={onSubmit}>
                 <h3>Please Register</h3>
-                <label htmlFor="username" className="sr-only">Username: </label>
-                <input type="text" 
-                       name="username" 
-                       value={user.username}
+                <label htmlFor="email" className="sr-only">Email: </label>
+                <input type="email" 
+                       name="email" 
+                       value={user.email}
                        onChange={onChange} 
                        className="form-control" 
-                       placeholder="Enter Username"/>
+                       placeholder="Enter Email"/>
                 <label htmlFor="password" className="sr-only">Password: </label>
                 <input type="password" 
+                       id="password"
                        name="password"
                        value={user.password} 
                        onChange={onChange} 
                        className="form-control" 
                        placeholder="Enter Password"/>
-                <label htmlFor="role" className="sr-only">Role: </label>
+                {/* <label htmlFor="role" className="sr-only">Role: </label>
                 <input type="text" 
                        name="role"
                        value={user.role}  
                        onChange={onChange} 
                        className="form-control" 
-                       placeholder="Enter role (admin/user)"/>
+                       placeholder="Enter role (admin/user)"/> */}
+                <input type="checkbox" onClick={showPass}></input><label for='show-password'>Show Password</label>
                 <button className="btn btn-lg btn-primary btn-block" 
                         type="submit">Register</button>
             </form>
