@@ -7,6 +7,24 @@ const secret = 'mysecretsshhh';
 const User = require('../models/User.js');
 const withAuth = require('./middleware');
 
+// Gets all users
+router.get('/', (req, res, next) => {
+  User.find()
+  .exec()
+  .then(docs => {
+      console.log(docs);
+      // if (docs.length >= 0) {
+          res.status(200).json(docs);
+      // }
+  })
+  .catch(err => {
+      console.log(err);
+      res.status(500).json({
+          error: err
+      });
+  });
+});
+
 // POST route to register a user
 router.post('/register', function(req, res) {
   const { email, password } = req.body;
