@@ -21,6 +21,15 @@ const Register = props=>{
         setUser({email : "", password : "",role : ""});
     }
 
+    const showPass = () => {
+        var pass = document.getElementById("password");
+        if (pass.type === "password") {
+          pass.type = "text";
+        } else {
+          pass.type = "password";
+        }
+      }
+
     const onSubmit = e =>{
         e.preventDefault();
         AuthService.register(user).then(data=>{
@@ -50,18 +59,20 @@ const Register = props=>{
                        placeholder="Enter Email"/>
                 <label htmlFor="password" className="sr-only">Password: </label>
                 <input type="password" 
+                       id="password"
                        name="password"
                        value={user.password} 
                        onChange={onChange} 
                        className="form-control" 
                        placeholder="Enter Password"/>
-                <label htmlFor="role" className="sr-only">Role: </label>
+                {/* <label htmlFor="role" className="sr-only">Role: </label>
                 <input type="text" 
                        name="role"
                        value={user.role}  
                        onChange={onChange} 
                        className="form-control" 
-                       placeholder="Enter role (admin/user)"/>
+                       placeholder="Enter role (admin/user)"/> */}
+                <input type="checkbox" onClick={showPass}></input><label for='show-password'>Show Password</label>
                 <button className="btn btn-lg btn-primary btn-block" 
                         type="submit">Register</button>
             </form>
