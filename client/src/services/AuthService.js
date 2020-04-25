@@ -2,7 +2,8 @@
 export default {
     login : user =>{
         console.log(user);
-        return fetch('/user/login',{
+        console.log(JSON.stringify(user));
+        return fetch('/api/login',{
             method : "post",
             body : JSON.stringify(user),
             headers : {
@@ -12,12 +13,15 @@ export default {
             if(res.status !== 401)
                 return res.json().then(data => data);
             else
-                return { isAuthenticated : false, user : {username : "",role : ""}};
+                return { isAuthenticated : false, user : {email : "",role : ""}};
+        })
+        .catch(err => {
+            console.log(err)
         })
     },
     register : user =>{
         console.log(user);
-        return fetch('/user/register',{
+        return fetch('/api/register',{
             method : "post",
             body : JSON.stringify(user),
             headers : {
@@ -27,17 +31,19 @@ export default {
           .then(data => data);
     },
     logout : ()=>{
-        return fetch('/user/logout')
+        return fetch('/api/logout',{
+            method : "post",
+        })
                 .then(res => res.json())
                 .then(data => data);
     },
     isAuthenticated : ()=>{
-        return fetch('/user/authenticated')
+        return fetch('/api/authenticated')
                 .then(res=>{
                     // if(res.status !== 401)
                     //     return res.json().then(data => data);
                     // else
-                        return { isAuthenticated : false, user : {username : "",role : ""}};
+                        return { isAuthenticated : false, user : {email : "",role : ""}};
                 });
     }
 

@@ -14,9 +14,9 @@ router.post('/register', function(req, res) {
   user.save(function(err) {
     if (err) {
       res.status(500)
-        .send("Error registering new user please try again.");
+        .json({message: "Error registering new user please try again."});
     } else {
-      res.status(200).send("Welcome to the club!");
+      res.status(200).json({message: "Successfully registered!"});
     }
   });
 });
@@ -28,8 +28,9 @@ finds a User with the given email
 and verify that the given password is correct
 If pass is correct, we issue a signed token to the requester
 */
-router.post('/authenticate', function(req, res) {
-    const { email, password } = req.body;
+router.post('/login', function(req, res) {
+    const email = req.body.email
+    const password = req.body.password
     User.findOne({ email }, function(err, user) {
       if (err) {
         console.error(err);
@@ -56,20 +57,33 @@ router.post('/authenticate', function(req, res) {
             });
           } else {
             // issue a signed token to the requester
-            const payload = { email };
-            const token = jwt.sign(payload, secret, {
-              expiresIn: '1h'
-            });
-            console.log("token:" + token);
-            console.log("ADDING COOKIE TO RES!");
-            res.cookie('token', token,  {httpOnly: false });
+            // const payload = { email };
+            // const token = jwt.sign(payload, secret, {
+            //   expiresIn: '1h'
+            // });
+            // console.log("token:" + token);
+            // console.log("ADDING COOKIE TO RES!");
+            // res.cookie('token', token,  {httpOnly: false });
 
-            res.sendStatus(200);
+            res.status(200)
+            .json({
+              isAuthenticated: true,
+              user: user,
+              message: "logged in!"
+            });
           }
         });
       }
     });
   });
+
+
+  router.post('/logout', function(req, res) {
+    res.status(200)
+    .json({
+      isAuthenticated: true,
+    });
+  })
 
   /*
 router.get('/secret', withAuth, function(req, res) {
@@ -77,11 +91,11 @@ router.get('/secret', withAuth, function(req, res) {
   });
   */
 
-router.get('/checkToken', withAuth, function(req, res) {
-  console.log("CHECKING TOKEN...");
+// router.get('/checkToken', withAuth, function(req, res) {
+//   console.log("CHECKING TOKEN...");
 
-    res.sendStatus(200);
-});
+//     res.sendStatus(200);
+// });
 
 
 

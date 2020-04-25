@@ -4,7 +4,7 @@ import Message from '../components/Message';
 import {AuthContext} from '../context/AuthContext';
 
 const Login = props=>{
-    const [user,setUser] = useState({username: "", password : ""});
+    const [user,setUser] = useState({email: "", password : ""});
     const [message,setMessage] = useState(null);
     const authContext = useContext(AuthContext);
 
@@ -33,12 +33,12 @@ const Login = props=>{
         <div>
             <form onSubmit={onSubmit}>
                 <h3>Please sign in</h3>
-                <label htmlFor="username" className="sr-only">Username: </label>
+                <label htmlFor="email" className="sr-only">Email: </label>
                 <input type="text" 
-                       name="username" 
+                       name="email" 
                        onChange={onChange} 
                        className="form-control" 
-                       placeholder="Enter Username"/>
+                       placeholder="Enter Email"/>
                 <label htmlFor="password" className="sr-only">Password: </label>
                 <input type="password" 
                        name="password" 
