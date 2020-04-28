@@ -15,4 +15,4 @@ node server.js
 
 
 ### Prerequisites
-A .env file with environment variable DB, containing a mongoDB connection string.
+A .env file with environment variable DB, containing a mongoDB connection string and Polygon.io api key.
