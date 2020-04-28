@@ -94,11 +94,12 @@ router.post('/login', function(req, res) {
     });
   });
 
-
   router.post('/logout', function(req, res) {
     res.status(200)
     .json({});
   })
+
+
 
   /*
 router.get('/secret', withAuth, function(req, res) {
