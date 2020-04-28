@@ -39,8 +39,37 @@ router.get('/stock/:ticker', (req, res, next) => {
         }
       })
     .then(res => {
-        console.log(res);
+        console.log(res.data);
         return res.data.last.price;
+    }
+        )
+    .catch(err => 
+        console.log(err)
+        );
+});
+
+//Gets news articles for ticker
+/*
+[ { symbols: ,
+     timestamp: ,
+     title: ,
+     url: ,
+    source: ,
+    summary: ,
+    image: ,
+     keywords:  }, {...}, {...}]
+*/
+
+router.get('/news/:ticker', (req, res, next) => {
+    const ticker = req.params.ticker;
+    axios.get('https://api.polygon.io/v1/meta/symbols/'+ticker+'/news', {
+        params: {
+          apiKey: process.env.API_KEY,
+        }
+      })
+    .then(res => {
+        //console.log(res.data);
+        return res.data;
     }
         )
     .catch(err => 
