@@ -30,6 +30,23 @@ router.get('/search/:key', (req, res, next) => {
         );
 });
 
+//Gets last trade price for symbol
+router.get('/stock/:ticker', (req, res, next) => {
+    const ticker = req.params.ticker;
+    axios.get('https://api.polygon.io/v1/last/stocks/'+ticker, {
+        params: {
+          apiKey: process.env.API_KEY,
+        }
+      })
+    .then(res => {
+        console.log(res);
+        return res.data.last.price;
+    }
+        )
+    .catch(err => 
+        console.log(err)
+        );
+});
 
 
 module.exports = router;
