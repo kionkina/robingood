@@ -6,7 +6,7 @@ cd ../
 npm run dev
 </code></pre>
 
-## Server-side usage (PORT:3000)
+## Server-side usage (PORT:5000)
 <pre>
 <code>
 npm i
