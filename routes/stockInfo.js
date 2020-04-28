@@ -109,31 +109,4 @@ router.get('/hotStocks', (req, res, next) => {
 };
 
 
-    const getResults = async () => {
-        const $ = await fetchData();
-        //console.log($);
-        console.log($);
-        //console.log($(".MarketTop-topTable"));
-        console.log("^");
-        let tickers = [];
-
-        $('.MarketTop-symbol').each(function(i, item){
-            console.log($(this));
-            tickers.push($(this).find('a').text());
-    });
-        console.log(tickers);
-        /*.each((item, index) => 
-        {
-            console.log($(item).text());
-        }
-        );*/
-
-
-    
-
-    }
-
-
-
-
 module.exports = router;
