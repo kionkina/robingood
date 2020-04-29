@@ -32,9 +32,16 @@ router.get('/:userId', (req, res, next) => {
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
     const stock = new Stock({
-        symbol: req.body.symbol,
+        name: req.body.name,
+        ticker: req.body.ticker,
         buyPrice: req.body.buyPrice,
-        quantity: req.body.quantity
+        quantity: req.body.quantity,
+        currentPrice: req.body.currentPrice,
+        todayReturn: req.body.todayReturn,
+        todayReturnPercentage: req.body.todayReturnPercentage,
+        totalReturn: req.body.totalReturn,
+        totalReturnPercentage: req.body.totalReturnPercentage,
+        marketCap: req.body.marketCap
     })
     const id = req.params.userId;
     console.log(id)
@@ -116,7 +123,7 @@ router.patch('/:userId/:stockId', (req, res, next) => {
     //     updateOps[ops.propName] = ops.value;
     // }
 
-    User.update({ _id: userId, 'stocks._id': stockId}, { $set: {'stocks.$.quantity': req.body.quantity} })
+    User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.quantity': req.body.quantity } })
         .exec()
         .then(result => {
             res.status(200).json(result);
