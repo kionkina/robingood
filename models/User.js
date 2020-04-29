@@ -8,7 +8,10 @@ const Stock = require('./stock')
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  stocks: { type: [Stock.schema]}
+  stocks: { type: [Stock.schema] },
+  buyingPower: { type: Number },
+  portfolioValue: { type: Number },
+  portfolioPerformance : { type: Number }
 });
 
 UserSchema.pre('save', function(next) {

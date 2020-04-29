@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const stockRoutes = require('./routes/stocks');
-const stockInfoRoutes = require('./routes/stockInfo');
-const routes = require('./routes/api');
 const path = require('path');
-require('dotenv').config();
 const cookieParser = require('cookie-parser');
+
+require('dotenv').config();
+
+const stockRoutes = require('./routes/userStocks');
+const stockInfoRoutes = require('./routes/stockInfo');
+const userRoutes = require('./routes/user');
+const routes = require('./routes/api');
 
 const app = express();
 
@@ -29,8 +32,9 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use('/api', routes);
-app.use('/stocks', stockRoutes);
+app.use('/userStocks', stockRoutes);
 app.use('/stockInfo', stockInfoRoutes);
+app.use('/user', userRoutes);
 
 app.use(cookieParser());
 
