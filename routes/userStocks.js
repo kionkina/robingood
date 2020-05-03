@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require("axios");
 const router = express.Router();
 
 const Stock = require('../models/stock');
@@ -29,6 +30,64 @@ router.get('/:userId', (req, res, next) => {
         });
 });
 
+// Update total returns for a given user + update portfolio
+// Get current price for a (given stock - initial price) / initial
+// Return all updated stocks
+// Gets all stocks for the user with given userId.
+router.get('/update/:userId', (req, res, next) => {
+    const userId = req.params.userId;
+    User.findById(userId).exec()
+        .then(doc => {
+            // If the document with the given id exists
+            if (doc) {
+                // Get stocks
+                const stocks = doc.stocks
+
+                // For each stock, grab updated price and calculate total returns + update on mongodb
+                stocks.forEach((item, index) => {
+                    axios.get('https://api.polygon.io/v1/last/stocks/' + item.ticker, {
+                        params: {
+                            apiKey: process.env.API_KEY,
+                        }
+                    })
+                        .then(result => {
+                            var buyPrice = stocks[index].buyPrice;
+                            var currentPrice = result.data.last.price;
+                            var totalReturn = (currentPrice - buyPrice).toFixed(2);
+                            var totalReturnPercentage = (totalReturn / buyPrice).toFixed(2);
+                            stocks[index].totalReturn = totalReturn;
+                            stocks[index].totalReturnPercentage = totalReturnPercentage;
+
+                            updateStock(userId, stocks[index].id, totalReturn, totalReturnPercentage)
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
+                        });
+                });
+
+                res.status(200).json(stocks);
+            } else {
+                res.status(404).json({
+                    message: 'No valid entry found for provided userId'
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
+// Update the given userStock with the given total returns.
+function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
+    User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage }});
+}
+
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
     const stock = new Stock({
@@ -37,11 +96,9 @@ router.post('/:userId', (req, res, next) => {
         buyPrice: req.body.buyPrice,
         quantity: req.body.quantity,
         currentPrice: req.body.currentPrice,
-        todayReturn: req.body.todayReturn,
-        todayReturnPercentage: req.body.todayReturnPercentage,
-        totalReturn: req.body.totalReturn,
-        totalReturnPercentage: req.body.totalReturnPercentage,
-        marketCap: req.body.marketCap
+        marketCap: req.body.marketCap,
+        totalReturn: 0,
+        totalReturnPercentage: 0,
     })
     const id = req.params.userId;
     console.log(id)
@@ -108,7 +165,6 @@ router.get('/:userId/:stockId', (req, res, next) => {
             });
         });
 });
-
 // Update the stock with given stockId for the user with given userId.
 // Only updates quantity for now.
 router.patch('/:userId/:stockId', (req, res, next) => {
@@ -204,10 +260,5 @@ router.delete('/:userId/:stockId', (req, res, next) => {
             });
         });
 });
-
-
-
-
-
 
 module.exports = router;

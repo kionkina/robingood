@@ -6,8 +6,6 @@ const stockSchema = mongoose.Schema({
     buyPrice: Number,
     quantity: Number,
     currentPrice: Number,
-    todayReturn: Number,
-    todayReturnPercentage: Number,
     totalReturn: Number,
     totalReturnPercentage: Number,
     marketCap: Number

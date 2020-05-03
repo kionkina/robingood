@@ -5,8 +5,6 @@ const cheerio = require("cheerio");
 const path = require('path');
 const fetch = require('fetch');
 
-
-
 //Gets list of tickers and stock names based on key
 router.get('/search/:ticker', (req, res, next) => {
     const ticker = req.params.ticker;
