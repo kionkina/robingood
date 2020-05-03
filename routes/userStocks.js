@@ -41,10 +41,12 @@ router.get('/update/:userId', (req, res, next) => {
             // If the document with the given id exists
             if (doc) {
                 // Get stocks
-                const stocks = doc.stocks
+                const stocks = doc.stocks;
+                let portfolioValue = 0;
 
                 // For each stock, grab updated price and calculate total returns + update on mongodb
                 stocks.forEach((item, index) => {
+                    portfolioValue += item.currentPrice * item.quantity
                     axios.get('https://api.polygon.io/v1/last/stocks/' + item.ticker, {
                         params: {
                             apiKey: process.env.API_KEY,
@@ -68,7 +70,17 @@ router.get('/update/:userId', (req, res, next) => {
                         });
                 });
 
-                res.status(200).json(stocks);
+                const filter = { _id: userId };
+                const update = { portfolioValue: portfolioValue };
+                
+                // Update portfolio value in the database.
+                User.findOneAndUpdate(filter, update, { new: true, upsert: true });
+
+                var response = {};
+                response['userId'] = userId;
+                response['portfolioValue'] = portfolioValue;
+                response['stocks'] = stocks;
+                res.status(200).json(response);
             } else {
                 res.status(404).json({
                     message: 'No valid entry found for provided userId'
