@@ -38,8 +38,43 @@ router.get('/search/:ticker', (req, res, next) => {
         });
 });
 
+
+
+//returns marketCap
+router.get('/metaData/:ticker', (req, res, next) => {
+    const ticker = req.params.ticker;
+    axios.get('https://api.polygon.io/v1/meta/symbols/' + ticker + '/company', {
+        params: {
+            apiKey: process.env.API_KEY,
+        }
+    })
+    .then(result => {
+        dict = {};
+        //console.log(result.data);
+        dict['marketCap'] = result.data.marketcap;
+        dict['name'] = result.data.name;
+        dict['industry'] = result.data.industry;
+        dict['ceo'] = result.data.ceo;
+        dict['similar'] = result.data.similar;
+        dict['tags'] = result.data.tags;
+
+        //console.log(marketCap);
+        
+        //dict['marketCap'] = marketCap;
+        res.status(200).json(dict);
+        return dict;
+     }
+        )
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
 //Gets last trade price for symbol
-router.get('/stockPrice/:ticker', (req, res, next) => {
+router.get('/stock/:ticker', (req, res, next) => {
     const ticker = req.params.ticker;
     axios.get('https://api.polygon.io/v1/last/stocks/' + ticker, {
         params: {
@@ -47,10 +82,13 @@ router.get('/stockPrice/:ticker', (req, res, next) => {
         }
     })
     .then(result => {
+
         var price = result.data.last.price;
+        var name = result.data.name;
         var dict = {};
         dict["ticker"] = ticker;
-	    dict["lastPrice"] = price;
+        dict["lastPrice"] = price;
+        dict["name"] = 
         res.status(200).json(dict);
         return dict;
      }
@@ -175,6 +213,54 @@ router.get('/equity/:userId', (req, res, next) => {
     );
     
 });
+
+
+//returns total equity of user at time point
+router.get('/stockCard/:ticker', (req, res, next) => {
+    const ticker = req.params.ticker;
+    //var url = path.join(__dirname, '/stocks/'+userId);
+  
+        
+        var ret = {};
+        let promises = [];
+        promises.push(
+            //calls stock endpoint to get lastPrice and ticker
+            axios.get('http://localhost:5000/stockInfo/stock/'+ticker).then(result => 
+            {
+                console.log(result.data);
+                Object.keys(result.data).map(key => {
+
+                    ret[key] = result.data[key];
+                })
+
+            }
+            ));
+
+        promises.push(axios.get('http://localhost:5000/stockInfo/metaData/'+ticker).then(result => 
+        {
+            //collects metaData from /stockInfo/metaData/ticker
+            Object.keys(result.data).map(key => {
+
+                ret[key] = result.data[key];
+            })
+            
+        }
+        ));
+
+        //combines responses
+    Promise.all(promises).then(() => {
+            //do stuff
+            console.log(ret);
+            return res.status(200).json(ret);
+            }) // end Promise.all(promises).then
+
+    .catch(err => 
+        console.log(err)
+    );
+});
+    
+    
+
 
 
 
