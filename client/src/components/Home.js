@@ -8,7 +8,7 @@ const Home = ()=>(
     <Container>
         <Row>
             <Col className="custom-col" sm>
-                <Row className="balance-row justify-content-center">
+                <Row className="balance-row">
                 <Container className="balance">
                     <div className="wrapper"> 
                         <Row className="balance-row">
@@ -54,9 +54,9 @@ const Home = ()=>(
                 </Container>
                 </Row>
                 <Row className="user-stocks-row justify-content-center">
-                <Card className="user-stocks">
+                <Card className="user-stocks border-0">
                   <Card.Header as="h5">User Stocks</Card.Header>
-                 <Card.Body>
+                 <Card.Body className="list-group">
                     <StockCard name="Apple" 
                                profit={true} 
                                cost="274.45" 
@@ -71,43 +71,57 @@ const Home = ()=>(
                                tick="TSLA" 
                                dailyReturn="-23.15 (-1.2%)" 
                                totalReturn="-32.45 (-4.3%)"></StockCard>
+                    <StockCard name="Nvidia" 
+                                profit={false} 
+                                cost="243.54" 
+                                marketCap="205.65 B" 
+                                tick="NVDA" 
+                                dailyReturn="-16.34 (-2.4%)" 
+                                totalReturn="-42.45 (-5.3%)"></StockCard>
                  </Card.Body>
                 </Card>
                 </Row>
             </Col>
             <Col className="custom-col" sm>
                 <Row className=" hot-stocks-row justify-content-center">
-            <Card className="hot-stocks">
-                  <Card.Header as="h5" className="d-flex align-items-center"> Hot Stocks  <input class="customForm form-control" type="text" placeholder="Search" aria-label="Search"></input></Card.Header>
-                    <Card.Body>
-                        <StockCard name="Google" 
-                               profit={true} 
-                               cost="1214.78" 
-                               marketCap="105.65 B" 
-                               tick="GOOGL" 
-                               dailyReturn="16.34 (2.4%)" 
-                               totalReturn="42.45 (5.3%)"></StockCard>
-                        <StockCard name="Netflix" 
-                               profit={true} 
-                               cost="123.24" 
-                               marketCap="105.65 B" 
-                               tick="NFLX" 
-                               dailyReturn="16.34 (2.4%)" 
-                               totalReturn="42.45 (5.3%)"></StockCard>
-                        <StockCard name="Nvidia" 
-                               profit={false} 
-                               cost="243.54" 
-                               marketCap="205.65 B" 
-                               tick="NVDA" 
-                               dailyReturn="-16.34 (-2.4%)" 
-                               totalReturn="-42.45 (-5.3%)"></StockCard>
+            <Card className="hot-stocks border-0">
+                  <Card.Header as="h5" className="d-flex align-items-center"> <span className="header">Hot Stocks</span>  <input class="customForm form-control" type="text" placeholder="Search" aria-label="Search"></input></Card.Header>
+                    <Card.Body className="list-group">
+                            <StockCard name="Google" 
+                                profit={true} 
+                                cost="1214.78" 
+                                marketCap="105.65 B" 
+                                tick="GOOGL" 
+                                dailyReturn="16.34 (2.4%)" 
+                                totalReturn="42.45 (5.3%)"></StockCard>
+                            <StockCard name="Netflix" 
+                                profit={true} 
+                                cost="123.24" 
+                                marketCap="105.65 B" 
+                                tick="NFLX" 
+                                dailyReturn="16.34 (2.4%)" 
+                                totalReturn="42.45 (5.3%)"></StockCard>
+                            <StockCard name="Nvidia" 
+                                profit={false} 
+                                cost="243.54" 
+                                marketCap="205.65 B" 
+                                tick="NVDA" 
+                                dailyReturn="-16.34 (-2.4%)" 
+                                totalReturn="-42.45 (-5.3%)"></StockCard>
+                            <StockCard name="Nvidia" 
+                                profit={false} 
+                                cost="243.54" 
+                                marketCap="205.65 B" 
+                                tick="NVDA" 
+                                dailyReturn="-16.34 (-2.4%)" 
+                                totalReturn="-42.45 (-5.3%)"></StockCard>
                     </Card.Body>
                 </Card>
             </Row>
           </Col>      
         </Row>
         <Row className="news justify-content-center">
-        <Card className="news-card">
+        <Card className="news-card border-0">
             <Card.Header as="h5">Current News</Card.Header>
                 <Card.Body>
                     
