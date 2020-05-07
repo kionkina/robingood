@@ -137,7 +137,32 @@ router.get('/news/:ticker', (req, res, next) => {
 //returns list of top movers from 
 //https://www.etrade.wallst.com/Research/Markets/Movers
 router.get('/hotStocks', (req, res, next) => {
-    fetchData();
+    axios.get('https://www.etrade.wallst.com/Research/Markets/Movers')
+        .then((response) => {
+            if (response.status === 200) {
+                const html = response.data;
+                const $ = cheerio.load(html);
+                let topMovers = [];
+                //console.log($);
+                $('.col-2').each(function (i, elem) {
+                    topMovers.push($($(elem).children()[1]).text());
+                });
+                topMovers = topMovers.slice(1);
+                console.log(topMovers);
+
+                res.status(200).json({
+                    hotStocks: topMovers
+                })
+            }
+
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+
 });
 
 
