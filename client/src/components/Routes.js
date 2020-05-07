@@ -9,7 +9,9 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Routes = props =>{
-    const {isAuthenticated} = useContext(AuthContext);
+    //console.log(useContext(AuthContext))
+    const {user, isAuthenticated} = useContext(AuthContext);
+    console.log(user)
     //const {isAuthenticated,user,setIsAuthenticated,setUser} = useContext(AuthContext);
     
     return(
@@ -26,7 +28,9 @@ const Routes = props =>{
                 )}
                 {isAuthenticated && (
                     <Switch>
-                        <Route exact path="/" component={Home}/>
+                        <Route exact path="/"
+                        render={(props) => <Home {...props} user={user} />}
+                        />
                         <Route exact path="/stock" component={StockPage}/>
                     </Switch>
                 )}

@@ -20,12 +20,12 @@ class StockCard extends Component{
                 <div className="stock-name"> {this.props.name}</div>
                 </Col>
                 <Col xs="auto">
-                <div className="stock-heading">Cost</div>
+                <div className="stock-heading">Avg. Cost</div>
                 <div className="stock-data"> {this.props.cost} </div>
                 </Col>
                 <Col xs="auto">
-                <div className="stock-heading">Market Cap</div>
-                <div className="stock-data"> {this.props.marketCap} </div>
+                <div className="stock-heading">Quantity</div>
+                <div className="stock-data"> {this.props.quantity} </div>
                 </Col>
             </Row>
             <Row className="stock-row">
