@@ -10,10 +10,10 @@ class CompanyInfoCard extends Component{
         return(
             <Container>
                 <Row>
-            <span className="equity-title">About APPL</span> 
+        <span className="equity-title">About {this.props.stockInfo.ticker}</span> 
             </Row>
             <Row>
-                {this.props.description}
+                {this.props.stockInfo.description}
             </Row>
             <Row>
             <Col>
@@ -21,15 +21,15 @@ class CompanyInfoCard extends Component{
                     CEO
                 </Row>
                 <Row>
-                    Da Guy Sr.
+                    {this.props.stockInfo.ceo}
                 </Row>
               </Col>
               <Col>
                 <Row className="semi-title">
-                    Founded
+                    List date:
                 </Row>
                 <Row>
-                    1943
+                    {this.props.stockInfo.listdate}
                 </Row>
               </Col>
             </Row>

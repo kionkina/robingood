@@ -205,21 +205,26 @@ class Home extends Component{
                              : <></>}
 
                             {this.state.hotStocks.length !== 0 && this.state.hotFiltered.length === 0 ?
+
                             this.state.hotStocks.map((eachStock) => (
+                                <div onClick={() => this.handleClick(eachStock.ticker)}>
                                 <HotStockCard name={eachStock.name} 
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
                                     tick={eachStock.ticker}></HotStockCard>
+                                    </div>
                                 )) : ""
                             }                   
                             {this.state.hotStocks.length !== 0 && this.state.hotFiltered.length !== 0 ?
                             this.state.hotFiltered.map((eachStock) => (
+                                <div onClick={() => this.handleClick(eachStock.ticker)}>
                                 <HotStockCard name={eachStock.name} 
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
                                     tick={eachStock.ticker}></HotStockCard>
+                                    </div>
                                 )) : ""
                             }   
                             </Card.Body>

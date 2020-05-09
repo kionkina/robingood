@@ -53,6 +53,8 @@ router.get('/update/:userId', (req, res, next) => {
                         }
                     })
                         .then(result => {
+                            console.log("abc1234")
+                            console.log(result.data)
                             var buyPrice = stocks[index].buyPrice;
                             var currentPrice = result.data.last.price;
                             var totalReturn = (currentPrice - buyPrice).toFixed(2);
@@ -153,16 +155,8 @@ function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
 
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
-    const stock = new Stock({
-        name: req.body.name,
-        ticker: req.body.ticker,
-        buyPrice: req.body.buyPrice,
-        quantity: req.body.quantity,
-        currentPrice: req.body.currentPrice,
-        marketCap: req.body.marketCap,
-        totalReturn: 0,
-        totalReturnPercentage: 0,
-    })
+    console.log("posting the stock")
+    let stock = req.body.stock
     const id = req.params.userId;
     console.log(id)
     User.findById(id).exec()
@@ -174,6 +168,16 @@ router.post('/:userId', (req, res, next) => {
                 doc.save()
                     .then(result => {
                         console.log(result)
+                        User.update({ _id: id }, {$inc: {'buyingPower': req.body.total}})
+                        .exec()
+                        .then(result => {
+                            res.status(200).json(result);
+                        })
+                        .catch(err => {
+                            res.status(500).json({
+                                error: err
+                            });
+                        });
                         res.status(200).json({
                             message: 'Handling POST request to /stocks',
                             createdStock: stock,
@@ -199,16 +203,6 @@ router.post('/:userId', (req, res, next) => {
             });
         });
         
-        User.update({ _id: userId }, {$inc: {'buyingPower': req.body.total}})
-        .exec()
-        .then(result => {
-            res.status(200).json(result);
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            });
-        });
 });
 
 // Get the stock with the given stockId for the user with given userId.

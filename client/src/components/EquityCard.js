@@ -3,7 +3,9 @@ import '../App.css';
 import {Container,Row,Col} from 'react-bootstrap'
 
 class EquityCard extends Component{
-
+    constructor(props) {
+        super(props);
+      }
 
 
     render(){
@@ -19,15 +21,15 @@ class EquityCard extends Component{
                     Shares
                 </Row>
                 <Row>
-                    2
+                    {this.props.stock.quantity}
                 </Row>
               </Col>
               <Col>
                 <Row className="semi-title">
-                    Buy Price
+                    Avg. Cost
                 </Row>
                 <Row>
-                    $37.15
+                    {this.props.stock.buyPrice}
                 </Row>
               </Col>
             </Row>
@@ -37,7 +39,7 @@ class EquityCard extends Component{
                     Equity
                 </Row>
                 <Row>
-                    $45.23
+                    ${this.props.stock.currentPrice * this.props.stock.quantity}
                 </Row>
               </Col>
               <Col>
@@ -45,7 +47,7 @@ class EquityCard extends Component{
                     Total Return
                 </Row>
                 <Row>
-                    <span className="g"> $8.08 (19.45%) </span>
+                    <span className="g"> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage * 100}%) </span>
                 </Row>
               </Col>
             </Row>

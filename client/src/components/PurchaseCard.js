@@ -62,9 +62,10 @@ class PurchaseCard extends Component{
                     totalReturn: 0,
                     totalReturnPercentage: 0,
                 }
-                axios.post('/userStocks/' + this.props.user._id, {total: -this.state.total})
+                axios.post('/userStocks/' + this.props.user._id, {stock: stock, total: -this.state.total})
                 .then(res => {
                   console.log(res);
+                  console.log('donehaha')
                     this.props.history.push('/')
                 })
                 .catch(function (err) {
