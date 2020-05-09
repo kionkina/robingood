@@ -19,6 +19,7 @@
     "fetch": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.9",
+    "react-search-box": "^2.0.2",
     "setprototypeof": "^1.2.0",
     "yarn": "^1.22.4"
   },

@@ -4,7 +4,7 @@ const router = express.Router();
 const Stock = require('../models/stock');
 const User = require('../models/User.js');
 
-// Gets all stocks for the user with given userId.
+// Gets user object with given userId.
 router.get('/:userId', (req, res, next) => {
     const userId = req.params.userId;
     User.findById(userId).exec()

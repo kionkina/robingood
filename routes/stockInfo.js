@@ -57,6 +57,10 @@ router.get('/metaData/:ticker', (req, res, next) => {
         dict['ceo'] = result.data.ceo;
         dict['similar'] = result.data.similar;
         dict['tags'] = result.data.tags;
+        dict['description'] = result.data.description;
+        dict['country'] = result.data.country;
+        dict['listdate'] = result.data.listdate;
+        dict['industry'] = result.data.industry;
 
         //console.log(marketCap);
         
@@ -66,7 +70,7 @@ router.get('/metaData/:ticker', (req, res, next) => {
      }
         )
         .catch(err => {
-            console.log(err);
+            //console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -94,12 +98,33 @@ router.get('/stock/:ticker', (req, res, next) => {
      }
         )
         .catch(err => {
-            console.log(err);
+            //console.log(err);
             res.status(500).json({
                 error: err
             });
         });
 });
+
+// router.get('/stockcomplete/:ticker', (req, res, next) => {
+//     axios.get('/stockInfo/stock/' + req.params.ticker)
+//     .then(resb => {
+//         axios.get('/stockInfo/metaData/' + req.params.ticker)
+//         .then(resc => {
+//             res.status(200).json({...resb.data, ...resc.data})
+//         })
+//         .catch(errb => {
+//             //console.log("hi123", errb)
+//             res.sendStatus(500)
+//             //console.log(errb)
+//         })
+//     })
+//     .catch(errc => {
+//         //console.log(req.params.ticker)
+//         console.log(errc)
+//         res.sendStatus(500)
+//         //console.log(errc)
+//     })
+// });
 
 //Gets news articles for ticker
 /*
@@ -148,7 +173,7 @@ router.get('/hotStocks', (req, res, next) => {
                     topMovers.push($($(elem).children()[1]).text());
                 });
                 topMovers = topMovers.slice(1);
-                console.log(topMovers);
+                //console.log(topMovers);
 
                 res.status(200).json({
                     hotStocks: topMovers
