@@ -95,10 +95,61 @@ router.get('/update/:userId', (req, res, next) => {
         });
 });
 
+// router.put('/update/:userId', (req, res, next) => {
+//     const userId = req.params.userId;
+//     User.findById(userId).exec()
+//         .then(doc => {
+//             // If the document with the given id exists
+//             if (doc) {
+//                 // Get stocks
+//                 const stocks = doc.stocks;
+//                 let portfolioValue = 0;
+//                 let promises = []
+//                 let newprices = []
+//                 // For each stock, grab updated price and calculate total returns + update on mongodb
+//                 stocks.forEach((stock, index) => {
+//                     promises.push(
+//                     axios.get('https://api.polygon.io/v1/last/stocks/' + stock.ticker, {
+//                         params: {
+//                             apiKey: process.env.API_KEY,
+//                         }
+//                     }).then(resb => {
+//                         newprices.push(resb.data.last.price)
+//                     })
+//                     )
+//                 }
+//                 )
+//                 Promise.all(promises).then(() => {
+//                     stocks.forEach((stock, index) => {
+                        
+//                             let buyPrice = stocks[index].buyPrice;
+//                             let currentPrice = newprices[index];
+//                             console.log(currentPrice)
+//                             let totalReturn = ((currentPrice - buyPrice) * stock.quantity).toFixed(2);
+//                             let totalReturnPercentage = (totalReturn / (buyPrice * stock.quantity)).toFixed(2);
+//                             updateStock(userId, stocks[index].id, totalReturn, totalReturnPercentage, currentPrice)
+                            
+//                     })
+//                 })
+//                 .catch(function (err) {
+//                     console.log(err);
+//                 });
+                
+//             }
+//         })
+//         res.sendStatus(200)
+//         })
+
+
+
 // Update the given userStock with the given total returns.
 function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
     User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage }});
 }
+
+
+// function updateStock(userId, stockId, totalReturn, totalReturnPercentage, currentPrice) {
+//     User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage, currentPrice: 'stocks.$.currentPrice' }});
 
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
@@ -147,6 +198,17 @@ router.post('/:userId', (req, res, next) => {
                 error: err
             });
         });
+        
+        User.update({ _id: userId }, {$inc: {'buyingPower': req.body.total}})
+        .exec()
+        .then(result => {
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
 });
 
 // Get the stock with the given stockId for the user with given userId.
@@ -191,7 +253,19 @@ router.patch('/:userId/:stockId', (req, res, next) => {
     //     updateOps[ops.propName] = ops.value;
     // }
 
-    User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.quantity': req.body.quantity } })
+    // User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.quantity': req.body.quantity } })
+    //     .exec()
+    //     .then(result => {
+    //         res.status(200).json(result);
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         res.status(500).json({
+    //             error: err
+    //         });
+    //     });
+
+        User.update({ _id: userId, 'stocks._id': stockId }, { $inc: { 'stocks.$.quantity': req.body.quantity, 'buyingPower': req.body.total } })
         .exec()
         .then(result => {
             res.status(200).json(result);
@@ -261,7 +335,7 @@ router.patch('/:userId/:stockId', (req, res, next) => {
 router.delete('/:userId/:stockId', (req, res, next) => {
     const stockId = req.params.stockId;
     const userId = req.params.userId;
-    User.update({ _id: userId }, { $pull: { stocks: { _id: stockId } } })
+    User.update({ _id: userId }, { $pull: { stocks: { _id: stockId } }, $inc: {'buyingPower': req.body.total}})
         .exec()
         .then(result => {
             res.status(200).json(result);

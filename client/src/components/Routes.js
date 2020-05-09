@@ -5,6 +5,7 @@ import Home from './Home';
 import Landing from './Landing';
 import Register from './Register';
 import StockPage from './StockPage';
+import Error from './Error';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
@@ -31,7 +32,11 @@ const Routes = props =>{
                         <Route exact path="/"
                         render={(props) => <Home {...props} user={user} />}
                         />
-                        <Route exact path="/stock" component={StockPage}/>
+                        <Route path="/stock/:ticker"
+                        render={(props) => <StockPage {...props} user={user}/>}
+                        />
+                        <Route path="/error/:status" component={Error}/>
+                        <Route component={Error}/>
                     </Switch>
                 )}
             </Router>
