@@ -19,7 +19,7 @@ class Home extends Component{
       }
     componentDidMount(){
         console.log(this.state.user)
-        axios.get('/userStocks/update/' + this.state.user._id)
+        axios.put('/userStocks/update/' + this.state.user._id)
         .then(res => {
           console.log(res);
           this.setState({
@@ -181,8 +181,10 @@ class Home extends Component{
                                 quantity={eachStock.quantity}
                                 //marketCap={this.marketCap(eachStock.marketCap)}
                                 tick={eachStock.ticker}
-                                dailyReturn="14.32 (1.2%)" 
-                                totalReturn="34.67 (4.3%)"
+                                //dailyReturn="14.32 (1.2%)" 
+                                currentPrice={eachStock.currentPrice}
+                                totalReturn={eachStock.totalReturn}
+                                totalReturnPercentage={eachStock.totalReturnPercentage}
                                 >
                                 </StockCard>
                                 </div>

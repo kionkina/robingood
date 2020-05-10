@@ -34,12 +34,12 @@ class StockCard extends Component{
                 <div className="stock-name"> {this.props.tick} </div>
                 </Col>
                 <Col xs="auto">
-                <div className="stock-heading">Today's Return</div>
-                <div className={dataProfit}> {this.props.dailyReturn}</div>
+                <div className="stock-heading">Current Price</div>
+                <div className="stock-data"> ${this.props.currentPrice}</div>
                 </Col>
                 <Col xs="auto">
                 <div className="stock-heading">Total Return</div>
-                <div className={dataProfit}> {this.props.totalReturn} </div>
+                <div className={dataProfit}> ${this.props.totalReturn} ({this.props.totalReturnPercentage * 100}%) </div>
                 </Col>
             </Row>
             </div>
