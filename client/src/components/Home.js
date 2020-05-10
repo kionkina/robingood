@@ -19,11 +19,17 @@ class Home extends Component{
       }
     componentDidMount(){
         console.log(this.state.user)
-        axios.get('/userStocks/update/' + this.state.user._id)
+        axios.put('/userStocks/update/' + this.state.user._id)
         .then(res => {
           console.log(res);
           this.setState({
               userStocks: res.data
+          })
+          axios.get('/user/' + this.state.user._id)
+          .then(resb => {
+              this.setState({
+                  user: resb.data
+              })
           })
         })
         .catch(function (err) {
@@ -73,7 +79,10 @@ class Home extends Component{
     }
 
     handleClick = (ticker) => {
-        this.props.history.push(`/stock/` + ticker)
+        this.props.history.push({
+            pathname: `/stock/` + ticker,
+            state: {user: this.state.user}
+        })
     }
     handleChange = (e) => {
         let temp = this.state.hotStocks
@@ -181,8 +190,10 @@ class Home extends Component{
                                 quantity={eachStock.quantity}
                                 //marketCap={this.marketCap(eachStock.marketCap)}
                                 tick={eachStock.ticker}
-                                dailyReturn="14.32 (1.2%)" 
-                                totalReturn="34.67 (4.3%)"
+                                //dailyReturn="14.32 (1.2%)" 
+                                currentPrice={eachStock.currentPrice}
+                                totalReturn={eachStock.totalReturn}
+                                totalReturnPercentage={eachStock.totalReturnPercentage}
                                 >
                                 </StockCard>
                                 </div>
@@ -205,21 +216,26 @@ class Home extends Component{
                              : <></>}
 
                             {this.state.hotStocks.length !== 0 && this.state.hotFiltered.length === 0 ?
+
                             this.state.hotStocks.map((eachStock) => (
+                                <div onClick={() => this.handleClick(eachStock.ticker)}>
                                 <HotStockCard name={eachStock.name} 
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
                                     tick={eachStock.ticker}></HotStockCard>
+                                    </div>
                                 )) : ""
                             }                   
                             {this.state.hotStocks.length !== 0 && this.state.hotFiltered.length !== 0 ?
                             this.state.hotFiltered.map((eachStock) => (
+                                <div onClick={() => this.handleClick(eachStock.ticker)}>
                                 <HotStockCard name={eachStock.name} 
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
                                     tick={eachStock.ticker}></HotStockCard>
+                                    </div>
                                 )) : ""
                             }   
                             </Card.Body>

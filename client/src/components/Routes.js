@@ -32,8 +32,7 @@ const Routes = props =>{
                         <Route exact path="/"
                         render={(props) => <Home {...props} user={user} />}
                         />
-                        <Route path="/stock/:ticker"
-                        render={(props) => <StockPage {...props} user={user}/>}
+                        <Route path="/stock/:ticker" component={StockPage}
                         />
                         <Route path="/error/:status" component={Error}/>
                         <Route component={Error}/>

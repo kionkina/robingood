@@ -13,17 +13,21 @@ class StockPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-          user: this.props.user,
-          stockInfo: undefined
+          //user: this.props.user,
+          stockInfo: undefined,
+          hasStock: [],
         }
       }
 
     componentDidMount(){
         axios.get('/stockInfo/metaData/' + this.props.match.params.ticker).then(resb => {
             axios.get('/stockInfo/stock/' + this.props.match.params.ticker).then(resc => {
-                console.log(({...resb.data, ...resc.data}))
+                let stockinfo = {...resb.data, ...resc.data}
+                console.log(stockinfo)
+                let hasstock = this.props.location.state.user.stocks.filter(stock => stock.ticker === stockinfo.ticker)
                 this.setState({
-                    stockInfo: ({...resb.data, ...resc.data})
+                    stockInfo: stockinfo,
+                    hasStock: hasstock
                 })
                 //console.log(hotstocks)
             })
@@ -67,7 +71,10 @@ class StockPage extends Component{
                 </Row>
                 <Row className="equity">
                     <Col md="6" className="justify-content-center align-items-middle">
-                        <EquityCard /> 
+                        {this.state.hasStock.length > 0 ?
+                        <EquityCard stock={this.state.hasStock[0]}/> : <></>
+                        }
+                        
                     </Col>
                     <Col md="6">
                         <FinancialCard /> 
@@ -76,13 +83,13 @@ class StockPage extends Component{
             </Col>
             <Col md="4">
                 <Row className="pcard" >
-                    <PurchaseCard user={this.props.user} stockInfo={this.state.stockInfo} buy={true}/>
+                    <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={true} history={this.props.history}/>
                 </Row>
                 <Row className="pcard">
-                    <PurchaseCard user={this.props.user} stockInfo={this.state.stockInfo} buy={false}/> 
+                    <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={false} history={this.props.history}/> 
                 </Row>
                 <Row className="pcard">
-                    <CompanyInfoCard description={this.state.stockInfo.description}/>
+                    <CompanyInfoCard stockInfo={this.state.stockInfo}/>
                 </Row>    
             </Col>
         </Row>
