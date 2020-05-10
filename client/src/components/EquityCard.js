@@ -47,7 +47,7 @@ class EquityCard extends Component{
                     Total Return
                 </Row>
                 <Row>
-                    <span className="g"> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage * 100}%) </span>
+                    <span className="g"> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage}%) </span>
                 </Row>
               </Col>
             </Row>

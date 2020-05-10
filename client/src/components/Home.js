@@ -25,6 +25,12 @@ class Home extends Component{
           this.setState({
               userStocks: res.data
           })
+          axios.get('/user/' + this.state.user._id)
+          .then(resb => {
+              this.setState({
+                  user: resb.data
+              })
+          })
         })
         .catch(function (err) {
           console.log(err);
@@ -73,7 +79,10 @@ class Home extends Component{
     }
 
     handleClick = (ticker) => {
-        this.props.history.push(`/stock/` + ticker)
+        this.props.history.push({
+            pathname: `/stock/` + ticker,
+            state: {user: this.state.user}
+        })
     }
     handleChange = (e) => {
         let temp = this.state.hotStocks

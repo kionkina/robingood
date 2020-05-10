@@ -13,7 +13,7 @@ class StockPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-          user: this.props.user,
+          //user: this.props.user,
           stockInfo: undefined,
           hasStock: [],
         }
@@ -24,7 +24,7 @@ class StockPage extends Component{
             axios.get('/stockInfo/stock/' + this.props.match.params.ticker).then(resc => {
                 let stockinfo = {...resb.data, ...resc.data}
                 console.log(stockinfo)
-                let hasstock = this.props.user.stocks.filter(stock => stock.ticker === stockinfo.ticker)
+                let hasstock = this.props.location.state.user.stocks.filter(stock => stock.ticker === stockinfo.ticker)
                 this.setState({
                     stockInfo: stockinfo,
                     hasStock: hasstock
@@ -83,10 +83,10 @@ class StockPage extends Component{
             </Col>
             <Col md="4">
                 <Row className="pcard" >
-                    <PurchaseCard user={this.props.user} stockInfo={this.state.stockInfo} buy={true} history={this.props.history}/>
+                    <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={true} history={this.props.history}/>
                 </Row>
                 <Row className="pcard">
-                    <PurchaseCard user={this.props.user} stockInfo={this.state.stockInfo} buy={false} history={this.props.history}/> 
+                    <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={false} history={this.props.history}/> 
                 </Row>
                 <Row className="pcard">
                     <CompanyInfoCard stockInfo={this.state.stockInfo}/>

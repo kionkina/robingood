@@ -21,7 +21,7 @@ class StockCard extends Component{
                 </Col>
                 <Col xs="auto">
                 <div className="stock-heading">Avg. Cost</div>
-                <div className="stock-data"> {this.props.cost} </div>
+                <div className="stock-data"> ${this.props.cost} </div>
                 </Col>
                 <Col xs="auto">
                 <div className="stock-heading">Quantity</div>
@@ -39,7 +39,7 @@ class StockCard extends Component{
                 </Col>
                 <Col xs="auto">
                 <div className="stock-heading">Total Return</div>
-                <div className={dataProfit}> ${this.props.totalReturn} ({this.props.totalReturnPercentage * 100}%) </div>
+                <div className={dataProfit}> ${this.props.totalReturn} ({this.props.totalReturnPercentage}%) </div>
                 </Col>
             </Row>
             </div>

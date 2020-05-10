@@ -121,7 +121,7 @@ router.put('/update/:userId', (req, res, next) => {
                             let buyPrice = stocks[index].buyPrice;
                             let currentPrice = resb.data.last.price;
                             let totalReturn = ((currentPrice - buyPrice) * stock.quantity).toFixed(2);
-                            let totalReturnPercentage = (totalReturn / (buyPrice * stock.quantity)).toFixed(2);
+                            let totalReturnPercentage = (totalReturn / (buyPrice * stock.quantity) * 100).toFixed(2);
 
                             stocks[index].totalReturn = totalReturn;
                             stocks[index].totalReturnPercentage = totalReturnPercentage;
@@ -334,18 +334,42 @@ router.patch('/:userId/:stockId', (req, res, next) => {
     //             error: err
     //         });
     //     });
+    
+        User.findById(userId).exec()
+        .then(doc => {
+            let oldStock = doc.stocks.filter(stock => stock.id === stockId)[0]
+            console.log(oldStock)
 
-        User.update({ _id: userId, 'stocks._id': stockId }, { $inc: { 'stocks.$.quantity': req.body.quantity, 'buyingPower': req.body.total } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result);
+            let temptotal = -req.body.total
+            let oldtotal = oldStock.buyPrice * oldStock.quantity
+            oldtotal += temptotal
+            let totalquantity = Number(oldStock.quantity) + Number(req.body.quantity)
+            let newcost = (oldtotal / totalquantity).toFixed(2)
+
+            //we shouldnt modify avg cost if we're selling 
+            if(req.body.total > 0){
+                newcost = oldStock.buyPrice
+            }
+            
+            User.update({ _id: userId, 'stocks._id': stockId }, { $inc: { 'stocks.$.quantity': req.body.quantity, 'buyingPower': req.body.total }, $set: {'stocks.$.buyPrice': newcost} })
+            .exec()
+            .then(result => {
+                res.status(200).json(result);
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            });
         })
-        .catch(err => {
+        .catch(err =>{
             console.log(err);
             res.status(500).json({
                 error: err
             });
-        });
+        })
+        // User.update({ _id: userId, 'stocks._id': stockId }, { $inc: { 'stocks.$.quantity': req.body.quantity, 'stocks.$.buyPrice': newavgcost, 'buyingPower': req.body.total } })
 
     // User.findById(userId).exec()
     //     .then(doc => {
