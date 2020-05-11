@@ -148,7 +148,7 @@ class PurchaseCard extends Component{
             </Row>
             <Row className="pad">
                 <Col>
-                {this.props.buy ? <>Buying Power: ${this.props.user.buyingPower}</> : <>Shares Owned: {this.state.stock[0].quantity}</>}
+                {this.props.buy ? <>Buying Power: ${this.props.user.buyingPower.toFixed(2)}</> : <>Shares Owned: {this.state.stock[0].quantity}</>}
                 </Col>
                 <Col>
                 <input type="submit" onClick={this.handleSubmit} class="btn btn-outline-success" value="Submit" />
