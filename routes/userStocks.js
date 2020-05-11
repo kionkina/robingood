@@ -37,7 +37,7 @@ router.put('/update/:userId', (req, res, next) => {
             // If the document with the given id exists
             if (user) {
                 // Get stocks
-                let stocks = doc.stocks;
+                let stocks = user.stocks;
                 let portfolioValue = 0;
                 let promises = []
                 //modify stocks array with updated currentprice, totalreturn + totalreturnpercentage
