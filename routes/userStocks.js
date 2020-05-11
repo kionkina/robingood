@@ -117,12 +117,11 @@ router.post('/:userId', (req, res, next) => {
             console.log('From database', user);
             // If the document with the given id exists
             if (user) {
-                var cost = stock.buyPrice * stock.quantity;
-                var newBuyingPower = user.buyingPower - cost;
-                var newPortfolioValue = user.portfolioValue + cost;
+                let cost = stock.buyPrice * stock.quantity;
+                let newBuyingPower = user.buyingPower - cost;
                 
                 const filter = { _id: id };
-                const update = { buyingPower: newBuyingPower, portfolioValue: newPortfolioValue };
+                const update = { buyingPower: newBuyingPower };
 
                 // Update portfolioValue.
                 User.findOneAndUpdate(filter, update, { new: true, upsert: true });
@@ -243,7 +242,8 @@ router.patch('/:userId/:stockId', (req, res, next) => {
 router.delete('/:userId/:stockId', (req, res, next) => {
     const stockId = req.params.stockId;
     const userId = req.params.userId;
-    User.update({ _id: userId }, { $pull: { stocks: { _id: stockId } }, $inc: {'$.buyingPower': req.body.total}})
+    console.log(req.body.total)
+    User.update({ _id: userId }, { $pull: { stocks: { _id: stockId } }, $inc: {"buyingPower": req.body.total}})
         .exec()
         .then(result => {
             res.status(200).json(result);
