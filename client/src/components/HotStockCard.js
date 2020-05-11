@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import '../App.css';
 import {Container,Row,Col} from 'react-bootstrap'
 
-class StockCard extends Component{
+class HotStockCard extends Component{
     render(){
         let profitStatus = "stock-container-r";
         let dataProfit = "stock-data-r"
@@ -20,12 +20,12 @@ class StockCard extends Component{
                 <div className="stock-name"> {this.props.name}</div>
                 </Col>
                 <Col xs="auto">
-                <div className="stock-heading">Avg. Cost</div>
-                <div className="stock-data"> ${this.props.cost} </div>
+                <div className="stock-heading">Price</div>
+                <div className="stock-data"> {this.props.price} </div>
                 </Col>
                 <Col xs="auto">
-                <div className="stock-heading">Quantity</div>
-                <div className="stock-data"> {this.props.quantity} </div>
+                <div className="stock-heading">Market Cap</div>
+                <div className="stock-data"> {this.props.marketCap} </div>
                 </Col>
             </Row>
             <Row className="stock-row">
@@ -33,14 +33,14 @@ class StockCard extends Component{
                 <div className="stock-heading">Ticker</div>
                 <div className="stock-name"> {this.props.tick} </div>
                 </Col>
-                <Col xs="auto">
-                <div className="stock-heading">Current Price</div>
-                <div className="stock-data"> ${this.props.currentPrice}</div>
+                {/* <Col xs="auto">
+                <div className="stock-heading">Today's Return</div>
+                <div className={dataProfit}> {this.props.dailyReturn}</div>
                 </Col>
                 <Col xs="auto">
                 <div className="stock-heading">Total Return</div>
-                <div className={dataProfit}> ${this.props.totalReturn} ({this.props.totalReturnPercentage}%) </div>
-                </Col>
+                <div className={dataProfit}> {this.props.totalReturn} </div>
+                </Col> */}
             </Row>
             </div>
         </Container>
@@ -49,4 +49,4 @@ class StockCard extends Component{
     }
 }
 
-export default StockCard;
+export default HotStockCard;

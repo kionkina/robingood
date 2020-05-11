@@ -1,3 +1,4 @@
+/*###### HOME PAGE #####*/
 .news{
   height: 45em;
 }
@@ -23,7 +24,7 @@
   height:100%;
 }
 .news-card{
-  width: 64.8em;
+  width: 100%
 }
 .balance{
   width: 30em;
@@ -49,8 +50,6 @@
   margin-bottom: 0.2em !important;
 }
 .customForm{
-  width: auto !important;
-  float: right !important;
   display: inline !important;
 }
 .buying-pow{
@@ -128,6 +127,9 @@
   padding-top:0.7em;
   font-size: 18px;
 }
+.g{
+  color: #2EBE33; 
+}
 .stock-data-g{
   color: #2EBE33;
   padding-top:0.7em;
@@ -138,7 +140,105 @@
   padding-top:0.7em;
   font-size: 18px;
 }
+.list-group{
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding-left: 20px;
+}
 .wrapper{
   height:100%;
   padding: 5px 5px;
+}
+.header{
+    width:8em;
+}
+/* ##########  */
+
+/* STOCK PAGE  */
+
+.stockp-row{
+
+  height: 55em;
+
+}
+
+.stock-chart{
+  height: 35em;
+}
+.equity-title{
+  font-size: 36px;
+  font-weight:bold;
+  margin-left: -4px;
+}
+.equity{
+  height: 20em;
+}
+.equity-card{
+  background-color: #f7f7f7;
+  height:12em;
+  padding: 10px;
+}
+.semi-title{
+  font-weight: 500;
+}
+.stock-title{
+  font-size: 52px;
+  font-weight: bold;
+}
+.chart-price{
+  font-size: 24px;
+}
+.stock-chart{
+  height: 30em;
+}
+.pad{
+  padding-top: 0.5em;
+  padding-bottom: 0.3em;
+}
+.title-row{
+  background-color:rgba(9, 255, 0, 0.048);
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  padding: .75rem 1.25rem;
+  font-weight: 500;
+}
+.pcard{
+  height: 16.4em;
+}
+.bb{
+  border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.ntitle{
+  color: #6F787E;
+}
+.container{
+  max-width: 1600px !important;
+}
+/* ########## */
+/* Turn on custom 8px wide scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* 1px wider than Lion. */
+  /* This is more usable for users trying to click it. */
+  background-color: rgba(172, 172, 172, 0);
+  -webkit-border-radius: 100px;
+}
+/* hover effect for both scrollbar area, and scrollbar 'thumb' */
+::-webkit-scrollbar:hover {
+  background-color: rgba(0, 0, 0, 0.09);
+}
+ 
+/* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+::-webkit-scrollbar-thumb:vertical {
+  /* This is the EXACT color of Mac OS scrollbars. 
+     Yes, I pulled out digital color meter */
+  background: rgba(104, 104, 104, 0.5);
+  -webkit-border-radius: 100px;
+  background-clip: padding-box;
+  border: 2px solid rgba(104, 104, 104, 0);
+  min-height: 10px; /*Prevent it from getting too small */
+}
+::-webkit-scrollbar-thumb:vertical:active {
+  background: rgba(75, 75, 75, 0.61); /* Some darker color when you click it */
+  -webkit-border-radius: 100px;
 }
