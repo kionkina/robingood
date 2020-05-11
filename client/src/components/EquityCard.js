@@ -9,7 +9,13 @@ class EquityCard extends Component{
 
 
     render(){
-
+        let profit = {};
+        if(this.props.stock.totalReturn > 0){
+            profit = { color: 'green' }
+        }
+        if(this.props.stock.totalReturn < 0){
+            profit = { color: 'red' }
+        }
         return(
             <Container>
             <Row>
@@ -39,7 +45,7 @@ class EquityCard extends Component{
                     Equity
                 </Row>
                 <Row>
-                    ${this.props.stock.currentPrice * this.props.stock.quantity}
+                    ${(this.props.stock.currentPrice * this.props.stock.quantity).toFixed(2)}
                 </Row>
               </Col>
               <Col>
@@ -47,7 +53,9 @@ class EquityCard extends Component{
                     Total Return
                 </Row>
                 <Row>
-                    <span className="g"> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage}%) </span>
+                    <span style={profit}> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage}%) </span>
+
+                    
                 </Row>
               </Col>
             </Row>

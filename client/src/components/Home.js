@@ -185,7 +185,7 @@ class Home extends Component{
                             this.state.userStocks.stocks.map((eachStock) => (
                                 <div onClick={() => this.handleClick(eachStock.ticker)}>
                                 <StockCard name={eachStock.name}
-                                profit={true} 
+                                profit={eachStock.buyPrice <= eachStock.currentPrice} 
                                 cost={eachStock.buyPrice}
                                 quantity={eachStock.quantity}
                                 //marketCap={this.marketCap(eachStock.marketCap)}
