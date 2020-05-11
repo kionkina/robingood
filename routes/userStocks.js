@@ -113,8 +113,8 @@ router.post('/:userId', (req, res, next) => {
     const id = req.params.userId;
     console.log(id)
     User.findById(id).exec()
-        .then(doc => {
-            console.log('From database', doc);
+        .then(user => {
+            console.log('From database', user);
             // If the document with the given id exists
             if (user) {
                 var cost = stock.buyPrice * stock.quantity;
@@ -204,8 +204,8 @@ router.patch('/:userId/:stockId', (req, res, next) => {
     const stockId = req.params.stockId;
 
         User.findById(userId).exec()
-        .then(doc => {
-            let oldStock = doc.stocks.filter(stock => stock.id === stockId)[0]
+        .then(user => {
+            let oldStock = user.stocks.filter(stock => stock.id === stockId)[0]
             console.log(oldStock)
 
             let temptotal = -req.body.total
