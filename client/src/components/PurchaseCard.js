@@ -88,7 +88,8 @@ class PurchaseCard extends Component{
         else{
             //use delete request if user wants to sell all of this stock
             if(this.state.shares == this.state.stock[0].quantity){
-                axios.delete('/userStocks/' + this.props.user._id + '/' + this.state.stock[0]._id, {total: this.state.total})
+                let payload = {total: this.state.total}
+                axios.delete('/userStocks/' + this.props.user._id + '/' + this.state.stock[0]._id, {data: payload})
                 .then(res => {
                   console.log(res);
                     this.props.history.push('/')
