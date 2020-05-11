@@ -9,13 +9,13 @@ const User = require('../models/User.js');
 router.get('/:userId', (req, res, next) => {
     const userId = req.params.userId;
     User.findById(userId).exec()
-        .then(doc => {
-            console.log('From database', doc);
+        .then(user => {
+            console.log('From database', user);
 
             // If the document with the given id exists
-            if (doc) {
-                console.log(doc.stocks)
-                res.status(200).json(doc.stocks);
+            if (user) {
+                console.log(user.stocks)
+                res.status(200).json(user.stocks);
             } else {
                 res.status(404).json({
                     message: 'No valid entry found for provided userId'
@@ -37,12 +37,12 @@ router.get('/:userId', (req, res, next) => {
 router.get('/update/:userId', (req, res, next) => {
     const userId = req.params.userId;
     User.findById(userId).exec()
-        .then(doc => {
+        .then(user => {
             // If the document with the given id exists
-            if (doc) {
+            if (user) {
                 // Get stocks
-                const stocks = doc.stocks;
-                let portfolioValue = 0;
+                const stocks = user.stocks;
+                var portfolioValue = 0;
 
                 // For each stock, grab updated price and calculate total returns + update on mongodb
                 stocks.forEach((item, index) => {
@@ -72,7 +72,7 @@ router.get('/update/:userId', (req, res, next) => {
 
                 const filter = { _id: userId };
                 const update = { portfolioValue: portfolioValue };
-                
+
                 // Update portfolio value in the database.
                 User.findOneAndUpdate(filter, update, { new: true, upsert: true });
 
@@ -97,7 +97,7 @@ router.get('/update/:userId', (req, res, next) => {
 
 // Update the given userStock with the given total returns.
 function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
-    User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage }});
+    User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage } });
 }
 
 // Post a stock data when the user initially buys.
@@ -107,26 +107,37 @@ router.post('/:userId', (req, res, next) => {
         ticker: req.body.ticker,
         buyPrice: req.body.buyPrice,
         quantity: req.body.quantity,
-        currentPrice: req.body.currentPrice,
+        currentPrice: req.body.buyPrice,
         marketCap: req.body.marketCap,
         totalReturn: 0,
         totalReturnPercentage: 0,
     })
-    const id = req.params.userId;
-    console.log(id)
-    User.findById(id).exec()
-        .then(doc => {
-            console.log('From database', doc);
+    const userId = req.params.userId;
+
+
+    User.findById(userId).exec()
+        .then(user => {
+            console.log('From database', user);
             // If the document with the given id exists
-            if (doc) {
-                doc.stocks.push(stock)
-                doc.save()
+            if (user) {
+                var cost = stock.buyPrice * stock.quantity;
+                var newBuyingPower = user.buyingPower - cost;
+                var newPortfolioValue = user.portfolioValue + cost;
+                
+                const filter = { _id: userId };
+                const update = { buyingPower: newBuyingPower, portfolioValue: newPortfolioValue };
+
+                // Update portfolioValue.
+                User.findOneAndUpdate(filter, update, { new: true, upsert: true });
+
+                user.stocks.push(stock)
+                user.save()
                     .then(result => {
                         console.log(result)
                         res.status(200).json({
                             message: 'Handling POST request to /stocks',
                             createdStock: stock,
-                            user: doc
+                            user: user
                         });
                     })
                     .catch(err => {
@@ -155,11 +166,11 @@ router.get('/:userId/:stockId', (req, res, next) => {
     const stockId = req.params.stockId;
 
     User.findById(userId).exec()
-        .then(doc => {
-            console.log('From database', doc);
+        .then(user => {
+            console.log('From database', user);
             // If the document with the given id exists
-            if (doc) {
-                var result = doc.stocks.find(obj => {
+            if (user) {
+                var result = user.stocks.find(obj => {
                     return obj._id == stockId;
                 });
                 console.log(result);
@@ -177,6 +188,7 @@ router.get('/:userId/:stockId', (req, res, next) => {
             });
         });
 });
+
 // Update the stock with given stockId for the user with given userId.
 // Only updates quantity for now.
 router.patch('/:userId/:stockId', (req, res, next) => {
@@ -202,74 +214,49 @@ router.patch('/:userId/:stockId', (req, res, next) => {
                 error: err
             });
         });
-
-    // User.findById(userId).exec()
-    //     .then(doc => {
-    //         console.log('From database', doc);
-    //         // If the document with the given id exists
-    //         if (doc) {
-    //             doc.updateOne({ 'stocks._id': stockId }, { $set: updateOps })
-    //                 .exec()
-    //                 .then(result => {
-    //                     res.status(200).json(result);
-    //                 })
-    //                 .catch(err => {
-    //                     console.log(err);
-    //                     res.status(500).json({
-    //                         error: err
-    //                     });
-    //                 });
-    //         } else {
-    //             res.status(404).json({
-    //                 message: 'No valid entry found for provided userId'
-    //             });
-    //         }
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     });
-
-    // User.update({ '_id': userId, 'stocks._id': stockId }, { $set: updateOps })
-    //     .exec()
-    //     .then(result => {
-    //         res.status(200).json(result);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     });
-
-    // Stock.update({ _id: stockId }, { $set: updateOps })
-    //     .exec()
-    //     .then(result => {
-    //         res.status(200).json(result);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     });
 });
 
 // Delete the stock with given stockId for the user with given userId.
 router.delete('/:userId/:stockId', (req, res, next) => {
     const stockId = req.params.stockId;
     const userId = req.params.userId;
-    User.update({ _id: userId }, { $pull: { stocks: { _id: stockId } } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result);
+
+    User.findById(userId).exec()
+        .then(user => {
+            // If the document with the given id exists
+            if (user) {
+                var result = user.stocks.find(obj => {
+                    return obj._id == stockId;
+                });
+                var gain = result.currentPrice * result.quantity;
+                var newBuyingPower = user.buyingPower + gain;
+                var newPortfolioValue = user.portfolioValue - gain;
+
+                const filter = { _id: userId };
+                const update = { buyingPower: newBuyingPower, portfolioValue: newPortfolioValue};
+
+                // Update buyingPower.
+                User.findOneAndUpdate(filter, update, { new: true, upsert: true });
+
+                // Remove stock from database.
+                User.update({ _id: userId }, { $pull: { stocks: { _id: stockId } } })
+                    .exec()
+                    .then(result => {
+                        res.status(200).json(result);
+                    })
+                    .catch(err => {
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+                console.log(result);
+            } else {
+                return null;
+            }
         })
         .catch(err => {
-            res.status(500).json({
-                error: err
-            });
+            console.log(err);
+            return null;
         });
 });
 
