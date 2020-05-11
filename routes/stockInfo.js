@@ -137,13 +137,16 @@ router.get('/news/:ticker', (req, res, next) => {
 //returns list of top movers from 
 //https://www.etrade.wallst.com/Research/Markets/Movers
 router.get('/hotStocks', (req, res, next) => {
-    fetchData();
-});
+    fetchData().then((hotStocks) => {
+        //console.log(hotStocks);
+        return res.status(200).json(hotStocks);
+        }
+    );
+})
 
 
 const fetchData = async () => {
-    axios.get('https://www.etrade.wallst.com/Research/Markets/Movers')
-        .then((response) => {
+    const response = await axios.get('https://www.etrade.wallst.com/Research/Markets/Movers');
             if (response.status === 200) {
                 const html = response.data;
                 const $ = cheerio.load(html);
@@ -157,16 +160,12 @@ const fetchData = async () => {
 
                 return topMovers;
             }
-
-        })
-        .catch(err => {
+        else
             console.log(err);
             res.status(500).json({
                 error: err
-            });
-        });
-
-};
+            })
+        };
 
 //returns total equity of user at time point
 router.get('/equity/:userId', (req, res, next) => {
@@ -226,7 +225,7 @@ router.get('/stockCard/:ticker', (req, res, next) => {
         promises.push(
             //calls stock endpoint to get lastPrice and ticker
             axios.get('http://localhost:5000/stockInfo/stock/'+ticker).then(result => 
-            {
+            { 
                 console.log(result.data);
                 Object.keys(result.data).map(key => {
 
@@ -259,7 +258,107 @@ router.get('/stockCard/:ticker', (req, res, next) => {
     );
 });
     
+router.get('/hotNews', (req, res, next) => {
+    let promises = [];
+    var news ={};
+        //calls stock endpoint to get lastPrice and ticker
+        axios.get('http://localhost:5000/stockInfo/hotStocks')
+            .then(stocks => {
+                console.log("stocks");
+                console.log(stocks.data);
+                stocks.data.map((item, i) =>{
+                news[item] =  [];
+            })
+        })
+    .then(() => {
+        
+        //console.log(news);
+       //collects metaData from /stockInfo/metaData/ticker
+       Object.keys(news).map(ticker => {
+           promises.push(axios.get('http://localhost:5000/stockInfo/news/'+ticker).then(result => 
+           {
+               news[ticker].push(result.data.news);
+               //console.log(result.data.news);
+          
+           }));
+       })
     
+   //combines responses
+   Promise.all(promises).then(() => {
+       //do stuff
+       console.log("returning...");
+       console.log(news);
+       return res.status(200).json(news);
+       }) // end Promise.all(promises).then
+
+.catch(err => 
+   console.log(err)
+)
+})
+
+});
+
+
+
+
+
+
+    
+//returns total equity of user at time point
+router.get('/userNews/:userId', (req, res, next) => {
+    
+    const userId = req.params.userId;
+    //var url = path.join(__dirname, '/stocks/'+userId);
+  
+        var ret = {};
+        let promises = [];
+        var news ={};
+            //calls stock endpoint to get lastPrice and ticker
+            axios.get('http://localhost:5000/userStocks/'+userId)
+            .then(result => {
+                //if the user has no stocks, return hotlist news
+                console.log("USER'S STOCKS:");
+                console.log(result.data);
+                if (result.data.length == 0){
+                    console.log("in conditional");
+                    res.redirect("/stockInfo/hotNews")
+                    //return axios.get("http://localhost:5000/stockInfo/hotNews");
+                }
+                var stocks = result.data;
+                //console.log("stocks:");
+                //console.log(stocks);
+                stocks.map((item, i) =>{
+                    news[item.symbol] =  [];
+                })
+            })
+        .then(() => {
+             console.log("IN THEN");
+             console.log(news);
+            //collects metaData from /stockInfo/metaData/ticker
+            Object.keys(news).map(ticker => {
+                promises.push(axios.get('http://localhost:5000/stockInfo/news/'+ticker).then(result => 
+                {
+                    news[ticker].push(result.data.news);
+                    //console.log(result.data.news);
+               
+                }));
+            })
+         
+        //combines responses
+        Promise.all(promises).then(() => {
+            //do stuff
+            
+            return res.status(200).json(news);
+            }) // end Promise.all(promises).then
+
+    .catch(err => 
+        console.log(err)
+    )})});
+        
+        
+
+    
+
 
 
 
