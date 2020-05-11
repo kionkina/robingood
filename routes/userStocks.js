@@ -121,7 +121,7 @@ router.post('/:userId', (req, res, next) => {
                 var newBuyingPower = user.buyingPower - cost;
                 var newPortfolioValue = user.portfolioValue + cost;
                 
-                const filter = { _id: userId };
+                const filter = { _id: id };
                 const update = { buyingPower: newBuyingPower, portfolioValue: newPortfolioValue };
 
                 // Update portfolioValue.
