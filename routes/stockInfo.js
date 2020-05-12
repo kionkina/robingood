@@ -72,8 +72,30 @@ router.get('/metaData/:ticker', (req, res, next) => {
             });
         });
 });
-
-//Gets last trade price for symbol
+//get performance of stock today
+router.get('/stockPerf/:ticker', (req, res, next) =>{
+    const tickerA = req.params.ticker;
+    axios.get('https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/'+ tickerA, {
+            params: {
+                apiKey: process.env.API_KEY,
+            }
+        })
+        .then(result =>{
+            console.log(result);
+            dict={};
+            dict["dailyPercent"] = result.data.ticker.todaysChangePerc.toFixed(2);
+            dict["priceChange"] = result.data.ticker.todaysChange.toFixed(2);
+            res.status(200).json(dict);
+            return dict;
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+//Gets last trade price for symbol 
 router.get('/stock/:ticker', (req, res, next) => {
     const ticker = req.params.ticker;
     axios.get('https://api.polygon.io/v1/last/stocks/' + ticker, {
@@ -82,15 +104,14 @@ router.get('/stock/:ticker', (req, res, next) => {
         }
     })
     .then(result => {
-        //console.log(result);
+        //console.log(result)
         var price = result.data.last.price;
         var dict = {};
         dict["ticker"] = ticker;
         dict["lastPrice"] = price;
         res.status(200).json(dict);
         return dict;
-     }
-        )
+     })
         .catch(err => {
             console.log(err);
             res.status(500).json({

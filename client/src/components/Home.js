@@ -38,26 +38,31 @@ class Home extends Component{
 
         axios.get('/stockinfo/hotStocks')
         .then(res => {
-            console.log(res)
-            console.log(res.data)
-            let hotstocksb = []
-            let promises = []
-            let promisesb = []
+            console.log(res);
+            console.log(res.data);
+            let hotstocksb = [];
+            let promises = [];
+            let promisesb = [];
+            let promisesc = [];
             for(let i = 0; i < res.data.length; i++){
                 promises.push(
                 axios.get('/stockInfo/metaData/' + res.data[i]).then(resb => {
                     promisesb.push(
                     axios.get('/stockInfo/stock/' + res.data[i]).then(resc => {
-                        console.log(i)
-                        hotstocksb.push({...resb.data, ...resc.data})
-                        
+                        promisesc.push(
+                            axios.get('/stockInfo/stockPerf/' + res.data[i]).then(resd => {
+                                hotstocksb.push({...resb.data, ...resc.data, ...resd.data});
+                            })
+                            .catch(errd => {
+                                
+                            })
+                        )               
                         //console.log(hotstocks)
                     })
                     .catch(errc => {
                         //console.log(errc)
                     })
                     )
-
                     //hotstocksb.push(resb.data)
                 })
                 .catch(errb => {
@@ -67,13 +72,15 @@ class Home extends Component{
             }
             Promise.all(promises).then(() => {
                 Promise.all(promisesb).then(() => {
-                    console.log(hotstocksb)
-                    this.setState({
-                        hotStocks: hotstocksb,
-                    })
-                })
-            });
-        })
+                    Promise.all(promisesc).then(() =>{
+                            console.log(hotstocksb)
+                            this.setState({
+                            hotStocks: hotstocksb,
+                         })
+                        })
+                    })    
+                });
+            })
         .catch(function (err) {
             console.log(err);
         });
@@ -220,7 +227,11 @@ class Home extends Component{
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
-                                    tick={eachStock.ticker}></HotStockCard>
+                                    tick={eachStock.ticker}
+                                    dailyChange={eachStock.priceChange}
+                                    profit = {eachStock.priceChange > 0}
+                                    dailyPerc = {eachStock.dailyPercent}
+                                    industry = {eachStock.industry.substring(0,13) + "."}></HotStockCard>
                                     </div>
                                 )) : ""
                             }                   
@@ -231,7 +242,11 @@ class Home extends Component{
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
-                                    tick={eachStock.ticker}></HotStockCard>
+                                    tick={eachStock.ticker}
+                                    dailyChange={eachStock.priceChange}
+                                    profit = {eachStock.priceChange > 0}
+                                    dailyPerc = {eachStock.dailyPercent}
+                                    industry = {eachStock.industry.substring(0,13) + "."}></HotStockCard>
                                     </div>
                                 )) : ""
                             }   

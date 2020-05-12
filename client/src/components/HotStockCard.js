@@ -33,14 +33,14 @@ class HotStockCard extends Component{
                 <div className="stock-heading">Ticker</div>
                 <div className="stock-name"> {this.props.tick} </div>
                 </Col>
-                {/* <Col xs="auto">
+                <Col xs="auto">
                 <div className="stock-heading">Today's Return</div>
-                <div className={dataProfit}> {this.props.dailyReturn}</div>
+                <div className={dataProfit}> {this.props.dailyChange} ({this.props.dailyPerc})% </div>
                 </Col>
                 <Col xs="auto">
-                <div className="stock-heading">Total Return</div>
-                <div className={dataProfit}> {this.props.totalReturn} </div>
-                </Col> */}
+                <div className="stock-heading">Industry</div>
+                <div className="stock-data"> {this.props.industry} </div>
+                </Col>
             </Row>
             </div>
         </Container>
