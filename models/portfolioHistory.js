@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const portfolioHistorySchema = mongoose.Schema({
-    timepoint: String,
+    timeStamp: String,
     totalEquity: Number
 })
 
