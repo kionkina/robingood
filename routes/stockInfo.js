@@ -82,13 +82,11 @@ router.get('/stock/:ticker', (req, res, next) => {
         }
     })
     .then(result => {
-
+        //console.log(result);
         var price = result.data.last.price;
-        var name = result.data.name;
         var dict = {};
         dict["ticker"] = ticker;
         dict["lastPrice"] = price;
-        dict["name"] = 
         res.status(200).json(dict);
         return dict;
      }
@@ -171,12 +169,13 @@ router.get('/equity/:userId', (req, res, next) => {
     const userId = req.params.userId;
     //var url = path.join(__dirname, '/stocks/'+userId);
     axios.get('http://localhost:5000/userStocks/'+userId).then(result => {
+        console.log(result);
         var stocks = result.data;
         var tickerQuantities = {};
         var tickerPrices = {};
         var equity = 0;
         stocks.map((item, i) =>{
-            tickerQuantities[item.symbol] =  item.quantity;
+            tickerQuantities[item.ticker] =  item.quantity;
         })
         
         let promises = [];
@@ -206,7 +205,7 @@ router.get('/equity/:userId', (req, res, next) => {
             //console.log("equity = " + equity);
              })
 
-            
+            console.log("EQUITY");
              return res.status(200).json(equity);
             }) // end Promise.all(promises).then
 })
@@ -406,7 +405,32 @@ router.get('/userNews/:userId', (req, res, next) => {
             }) 
         })
     });
-      
+    
+    router.get('/updateAllPortfolios', (req, res, next) => {
+        User.find({}, function(err, users) {
+            var userMap = {};
+        
+            let promises = [];
+            users.forEach(function(user) {
+              userMap[user._id] = user;
+              promises.push(
+
+                axios.get("http://localhost:5000/stockInfo/updatePortfolioHistory/"+ user._id).then((result) =>{
+                console.log("updated portfolio for " + user);
+              }).catch((err) => console.log(err))
+             ); //end promises.push
+
+            });
+
+          //combines responses
+   Promise.all(promises).then(() => {
+    return res.status(200).json({"message":"update complete"});
+    }) // end Promise.all(promises).then
+
+    .catch(err => 
+    console.log(err))
+    })
+});
         
     
 
