@@ -16,9 +16,9 @@ class PurchaseCard extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
       }
     componentDidMount(){
-        console.log(this.props.user)
-        let ticker = this.props.stockInfo.ticker
-        let userstocks = this.props.user.stocks
+        console.log(this.props.user);
+        let ticker = this.props.stockInfo.ticker;
+        let userstocks = this.props.user.stocks;
         this.setState({
             stock: userstocks.filter(stock => ticker === stock.ticker)
         })
@@ -115,9 +115,8 @@ class PurchaseCard extends Component{
 
     render(){
         return(
-            <Container>
-                {/* if buying and buying power > stockprice or if selling and the user has the any quantity of the stock, display the card */}
-                {(this.props.buy && this.props.user.buyingPower > this.props.stockInfo.lastPrice) || (!this.props.buy && (this.state.stock.length > 0)) ?
+            <Container className={this.props.lock ? "lock": ""}>
+                {this.props.lock ? <span className="lockText">Purchase a stock first!</span> :<> </> }
                 <div>
             <Row className="title-row">
                 <span> {this.props.buy ? 'Buy' : 'Sell'} {this.props.stockInfo.ticker}</span>
@@ -148,7 +147,7 @@ class PurchaseCard extends Component{
             </Row>
             <Row className="pad">
                 <Col>
-                {this.props.buy ? <>Buying Power: ${this.props.user.buyingPower.toFixed(2)}</> : <>Shares Owned: {this.state.stock[0].quantity}</>}
+                {this.props.buy ? <>Buying Power: ${this.props.user.buyingPower.toFixed(2)}</> : <>Shares Owned: {this.state.stock[0] ? this.state.stock[0].quantity : 0}</>}
                 </Col>
                 <Col>
                 <input type="submit" onClick={this.handleSubmit} class="btn btn-outline-success" value="Submit" />
@@ -156,8 +155,6 @@ class PurchaseCard extends Component{
                 </Col>
             </Row>
             </div>
-            : <></>
-            }
             </Container>
         );
     }
