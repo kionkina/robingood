@@ -5,6 +5,7 @@ const async = require('async');
 const Stock = require('../models/stock');
 const User = require('../models/User.js');
 
+
 // Gets all stocks for the user with given userId.
 router.get('/:userId', (req, res, next) => {
     const userId = req.params.userId;
@@ -105,6 +106,7 @@ router.put('/update/:userId', (req, res, next) => {
 function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
     User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage } });
 }
+
 
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
@@ -253,5 +255,13 @@ router.delete('/:userId/:stockId', (req, res, next) => {
             return null;
         });
 });
+
+
+
+
+
+  
+        
+
 
 module.exports = router;
