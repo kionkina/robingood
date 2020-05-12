@@ -8,13 +8,10 @@ const User = require('../models/User.js');
 router.get('/:userId', (req, res, next) => {
     const userId = req.params.userId;
     User.findById(userId).exec()
-        .then(doc => {
-            console.log('From database', doc);
-
+        .then(user => {
             // If the document with the given id exists
-            if (doc) {
-                console.log(doc)
-                res.status(200).json(doc);
+            if (user) {
+                res.status(200).json(user);
             } else {
                 res.status(404).json({
                     message: 'No valid entry found for provided userId'

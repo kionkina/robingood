@@ -3,7 +3,7 @@ import AuthService from '../services/AuthService';
 import Message from '../components/Message';
 import {AuthContext} from '../context/AuthContext';
 
-const Login = props=>{
+const Login = props => {
     const [user,setUser] = useState({email: "", password : ""});
     const [message,setMessage] = useState(null);
     const authContext = useContext(AuthContext);
@@ -15,7 +15,6 @@ const Login = props=>{
     const onSubmit = e =>{
         e.preventDefault();
         AuthService.login(user).then(data=>{
-            console.log(data);
             const { isAuthenticated,user,message} = data;
             if(isAuthenticated){
                 authContext.setUser(user);

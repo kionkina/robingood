@@ -10,8 +10,6 @@ router.get('/:userId', (req, res, next) => {
     const userId = req.params.userId;
     User.findById(userId).exec()
         .then(user => {
-            console.log('From database', user);
-
             // If the document with the given id exists
             if (user) {
                 console.log(user.stocks)
@@ -110,11 +108,10 @@ function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
 router.post('/:userId', (req, res, next) => {
     console.log("posting the stock")
     let stock = req.body.stock
-    const id = req.params.userId;
-    console.log(id)
-    User.findById(id).exec()
+    const userId = req.params.userId;
+
+    User.findById(userId).exec()
         .then(user => {
-            console.log('From database', user);
             // If the document with the given id exists
             if (user) {
                 var cost = stock.buyPrice * stock.quantity;
@@ -130,8 +127,7 @@ router.post('/:userId', (req, res, next) => {
                 user.stocks.push(stock)
                 user.save()
                     .then(result => {
-                        console.log(result)
-                        User.update({ _id: id }, {$inc: {'buyingPower': req.body.total}})
+                        User.update({ _id: userId }, {$inc: {'buyingPower': req.body.total}})
                         .exec()
                         .then(result => {
                             res.status(200).json(result);
@@ -175,13 +171,11 @@ router.get('/:userId/:stockId', (req, res, next) => {
 
     User.findById(userId).exec()
         .then(user => {
-            console.log('From database', user);
             // If the document with the given id exists
             if (user) {
                 var result = user.stocks.find(obj => {
                     return obj._id == stockId;
                 });
-                console.log(result);
                 res.status(200).json(result);
             } else {
                 res.status(404).json({
@@ -206,7 +200,6 @@ router.patch('/:userId/:stockId', (req, res, next) => {
         User.findById(userId).exec()
         .then(user => {
             let oldStock = user.stocks.filter(stock => stock.id === stockId)[0]
-            console.log(oldStock)
 
             let temptotal = -req.body.total
             let oldtotal = oldStock.buyPrice * oldStock.quantity
