@@ -4,11 +4,13 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const Stock = require('./stock')
+const portfolioHistory = require('./portfolioHistory');
 
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   stocks: { type: [Stock.schema] },
+  portfolioHistory: { type:[portfolioHistory.schema] },
   buyingPower: { type: Number },
   portfolioValue: { type: Number },
   portfolioPerformance : { type: Number }

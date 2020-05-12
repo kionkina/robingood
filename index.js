@@ -3,6 +3,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const cron = require("node-cron");
+const axios = require("axios");
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
 
 require('dotenv').config();
 
@@ -45,4 +52,11 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
+});
+
+
+cron.schedule("* * * * *", function() {
+  axios.get("http://localhost:5000/stockInfo/updateAllPortfolios/");
+  console.log("running a task every minute");
+
 });

@@ -6,7 +6,8 @@ import Card from 'react-bootstrap/Card';
 import EquityCard from './EquityCard';
 import FinancialCard from './FinancialCard';
 import PurchaseCard from './PurchaseCard';
-import CompanyInfoCard from './CompanyInfoCard'
+import CompanyInfoCard from './CompanyInfoCard';
+import TradingViewWidget from 'react-tradingview-widget';
 
 class StockPage extends Component{
 
@@ -54,48 +55,51 @@ class StockPage extends Component{
         return(
         <Container>
             {this.state.stockInfo ? 
-        <Row className="stockp-row">
-            <Col md="8" >
+        <><Row>
+            <Col>
                 <Row className="stock-title">
-                 <Col> 
+                    <Col>
                     {this.state.stockInfo.name} - {this.state.stockInfo.ticker}
-                </Col>  
+                    </Col>
                 </Row>
                 <Row className="chart-price semi-title">
-                <Col>
+                    <Col>
                     ${this.state.stockInfo.lastPrice}
-                </Col>
-                </Row>
-                <Row className="stock-chart">
-
-                </Row>
-                <Row className="equity">
-                    <Col md="6" className="justify-content-center align-items-middle">
-                        {this.state.hasStock.length > 0 ?
-                        <EquityCard stock={this.state.hasStock[0]}/> : <></>
-                        }
-                        
-                    </Col>
-                    <Col md="6">
-                        <FinancialCard /> 
                     </Col>
                 </Row>
-            </Col>
-            <Col md="4">
-                <Row className="pcard" >
-                    <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={true} history={this.props.history}/>
-                </Row>
-                <Row className="pcard">
-                    <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={false} history={this.props.history}/> 
-                </Row>
-                <Row className="pcard">
-                    <CompanyInfoCard stockInfo={this.state.stockInfo}/>
-                </Row>    
             </Col>
         </Row>
+        <Row className="stock-chart">
+                <Col md="8" s="12">
+                    <TradingViewWidget symbol={this.state.stockInfo.ticker} autosize />
+                </Col>
+                <Col md="4">
+                    <Row className="pcard" >
+                        <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={true} history={this.props.history}/>
+                    </Row>
+                    <Row className="pcard">
+                        {this.state.hasStock.length > 0 ? 
+                        <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={false} history={this.props.history}/> :
+                        <PurchaseCard user={this.props.location.state.user} stockInfo={this.state.stockInfo} buy={false} lock={true}/>}
+                    </Row>
+                </Col>
+        </Row>
+        <Row className="info">
+            <Col md="4" className="justify-content-center align-items-middle">
+                    {this.state.hasStock.length > 0 ?
+                    <EquityCard stock={this.state.hasStock[0]}/> : <EquityCard lock={true} /> 
+                    }            
+            </Col>
+            <Col md="4">
+                   <FinancialCard /> 
+            </Col>
+            <Col md="4">   
+                    <CompanyInfoCard stockInfo={this.state.stockInfo}/>
+            </Col>
+        </Row></>
             : <></>
     }
-        <Row className="news justify-content-center">
+        <Row className="news pad-top justify-content-center">
             <Card className="news-card border-0">
               <Card.Header as="h5">Current News</Card.Header>
                 <Card.Body>

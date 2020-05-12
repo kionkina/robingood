@@ -38,25 +38,31 @@ class Home extends Component{
 
         axios.get('/stockinfo/hotStocks')
         .then(res => {
-            console.log(res.data.hotStocks)
-            let hotstocksb = []
-            let promises = []
-            let promisesb = []
-            for(let i = 0; i < res.data.hotStocks.length; i++){
+            console.log(res);
+            console.log(res.data);
+            let hotstocksb = [];
+            let promises = [];
+            let promisesb = [];
+            let promisesc = [];
+            for(let i = 0; i < res.data.length; i++){
                 promises.push(
-                axios.get('/stockInfo/metaData/' + res.data.hotStocks[i]).then(resb => {
+                axios.get('/stockInfo/metaData/' + res.data[i]).then(resb => {
                     promisesb.push(
-                    axios.get('/stockInfo/stock/' + res.data.hotStocks[i]).then(resc => {
-                        console.log(i)
-                        hotstocksb.push({...resb.data, ...resc.data})
-                        
+                    axios.get('/stockInfo/stock/' + res.data[i]).then(resc => {
+                        promisesc.push(
+                            axios.get('/stockInfo/stockPerf/' + res.data[i]).then(resd => {
+                                hotstocksb.push({...resb.data, ...resc.data, ...resd.data});
+                            })
+                            .catch(errd => {
+                                
+                            })
+                        )               
                         //console.log(hotstocks)
                     })
                     .catch(errc => {
                         //console.log(errc)
                     })
                     )
-
                     //hotstocksb.push(resb.data)
                 })
                 .catch(errb => {
@@ -66,13 +72,15 @@ class Home extends Component{
             }
             Promise.all(promises).then(() => {
                 Promise.all(promisesb).then(() => {
-                    console.log(hotstocksb)
-                    this.setState({
-                        hotStocks: hotstocksb,
-                    })
-                })
-            });
-        })
+                    Promise.all(promisesc).then(() =>{
+                            console.log(hotstocksb)
+                            this.setState({
+                            hotStocks: hotstocksb,
+                         })
+                        })
+                    })    
+                });
+            })
         .catch(function (err) {
             console.log(err);
         });
@@ -135,12 +143,12 @@ class Home extends Component{
                                 <Row className="balance-row">
                                     <Col>
                                     <div className="stock-heading"> Porfolio Value <svg class="bi bi-question-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+        <path fillRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clipRule="evenodd"/>
         <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
         </svg></div>
                                     <div className="portfolio-val">{"$" + this.numberWithCommas(this.state.userStocks.portfolioValue + this.state.user.buyingPower)} <svg class="bi bi-arrow-up" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" d="M8 3.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V4a.5.5 0 01.5-.5z" clip-rule="evenodd"/>
-        <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8 3.707 5.354 6.354a.5.5 0 11-.708-.708l3-3z" clip-rule="evenodd"/>
+        <path fillRule="evenodd" d="M8 3.5a.5.5 0 01.5.5v9a.5.5 0 01-1 0V4a.5.5 0 01.5-.5z" clipRule="evenodd"/>
+        <path fillRule="evenodd" d="M7.646 2.646a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8 3.707 5.354 6.354a.5.5 0 11-.708-.708l3-3z" clip-rule="evenodd"/>
         </svg> <span className="percent"> 2.4%</span> </div>
                                     </Col>
                                 </Row>
@@ -148,7 +156,7 @@ class Home extends Component{
                                 <Row className="balance-row">
                                     <Col>
                                     <div className="stock-heading"> Buying Power <svg class="bi bi-question-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+        <path fillRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clipRule="evenodd"/>
         <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
         </svg></div>
                                     <div className="buying-pow">{"$" + this.numberWithCommas(this.state.user.buyingPower)
@@ -178,14 +186,14 @@ class Home extends Component{
                         </Container>
                         </Row>
                         <Row className="user-stocks-row justify-content-center">
-                        <Card className="user-stocks border-0">
+                        <Card className="user-stocks border-1">
                         <Card.Header as="h5">User Stocks</Card.Header>
                         <Card.Body className="list-group">
                             {this.state.userStocks.stocks[0] ? 
                             this.state.userStocks.stocks.map((eachStock) => (
                                 <div onClick={() => this.handleClick(eachStock.ticker)}>
-                                <StockCard name={eachStock.name}
-                                profit={true} 
+                                <StockCard name={eachStock.name.substring(0,10)+"."}
+                                profit={eachStock.buyPrice <= eachStock.currentPrice} 
                                 cost={eachStock.buyPrice}
                                 quantity={eachStock.quantity}
                                 //marketCap={this.marketCap(eachStock.marketCap)}
@@ -206,35 +214,39 @@ class Home extends Component{
 
                     <Col className="custom-col" sm>
                         <Row className=" hot-stocks-row justify-content-center">
-                    <Card className="hot-stocks border-0">
-                            <Card.Body className="list-group">
-
-                            {this.state.hotStocks.length !== 0 ?
-                            <div>
+                    <Card className="hot-stocks border-1">
                             <Card.Header as="h5" className="d-flex align-items-center"> <span className="header">Hot Stocks</span>  <input class="customForm form-control" type="text" placeholder="Search" aria-label="Search" onChange={this.handleChange}></input></Card.Header>
-                            </div>
-                             : <></>}
-
+                            <Card.Body className="list-group">
+                            {this.state.hotStocks.length === 0 ? 
+                            <span className="lockText"> Loading Hot Stocks</span>
+                            : ""}
                             {this.state.hotStocks.length !== 0 && this.state.hotFiltered.length === 0 ?
-
                             this.state.hotStocks.map((eachStock) => (
                                 <div onClick={() => this.handleClick(eachStock.ticker)}>
-                                <HotStockCard name={eachStock.name} 
+                                <HotStockCard name={eachStock.name.substring(0,10)+"."} 
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
-                                    tick={eachStock.ticker}></HotStockCard>
+                                    tick={eachStock.ticker}
+                                    dailyChange={eachStock.priceChange}
+                                    profit = {eachStock.priceChange > 0}
+                                    dailyPerc = {eachStock.dailyPercent}
+                                    industry = {eachStock.industry.substring(0,13) + "."}></HotStockCard>
                                     </div>
                                 )) : ""
                             }                   
                             {this.state.hotStocks.length !== 0 && this.state.hotFiltered.length !== 0 ?
                             this.state.hotFiltered.map((eachStock) => (
                                 <div onClick={() => this.handleClick(eachStock.ticker)}>
-                                <HotStockCard name={eachStock.name} 
+                                <HotStockCard name={eachStock.name.substring(0,10)+"."} 
                                     profit={true} 
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
-                                    tick={eachStock.ticker}></HotStockCard>
+                                    tick={eachStock.ticker}
+                                    dailyChange={eachStock.priceChange}
+                                    profit = {eachStock.priceChange > 0}
+                                    dailyPerc = {eachStock.dailyPercent}
+                                    industry = {eachStock.industry.substring(0,13) + "."}></HotStockCard>
                                     </div>
                                 )) : ""
                             }   

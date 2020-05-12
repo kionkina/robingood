@@ -9,9 +9,16 @@ class EquityCard extends Component{
 
 
     render(){
-
+        let profit = {};
+        if(this.props.stock && this.props.stock.totalReturn > 0){
+            profit = { color: 'green' }
+        }
+        if(this.props.stock && this.props.stock.totalReturn < 0){
+            profit = { color: 'red' }
+        }
         return(
-            <Container>
+            <Container className={this.props.lock ? "lock" : ""}>
+               {this.props.lock ? <span className="lockText">Purchase a stock first!</span> :<> </> }
             <Row>
             <span className="equity-title">Your Position</span> 
             </Row>
@@ -21,7 +28,7 @@ class EquityCard extends Component{
                     Shares
                 </Row>
                 <Row>
-                    {this.props.stock.quantity}
+                    {this.props.stock ? this.props.stock.quantity : 0}
                 </Row>
               </Col>
               <Col>
@@ -29,7 +36,7 @@ class EquityCard extends Component{
                     Avg. Cost
                 </Row>
                 <Row>
-                    {this.props.stock.buyPrice}
+                    {this.props.stock? this.props.buyPrice : 0}
                 </Row>
               </Col>
             </Row>
@@ -39,7 +46,7 @@ class EquityCard extends Component{
                     Equity
                 </Row>
                 <Row>
-                    ${this.props.stock.currentPrice * this.props.stock.quantity}
+                    ${this.props.stock ? (this.props.stock.currentPrice * this.props.stock.quantity).toFixed(2) : 0}
                 </Row>
               </Col>
               <Col>
@@ -47,7 +54,10 @@ class EquityCard extends Component{
                     Total Return
                 </Row>
                 <Row>
-                    <span className="g"> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage}%) </span>
+                  {this.props.stock ? 
+                    <span style={profit}> ${this.props.stock.totalReturn} ({this.props.stock.totalReturnPercentage}%) </span>
+                  : 0}
+                    
                 </Row>
               </Col>
             </Row>
