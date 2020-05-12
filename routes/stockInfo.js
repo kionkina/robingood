@@ -4,6 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const path = require('path');
 const fetch = require('fetch');
+const User = require('../models/User.js');
 
 //Gets list of tickers and stock names based on key
 router.get('/search/:ticker', (req, res, next) => {
@@ -287,11 +288,6 @@ router.get('/hotNews', (req, res, next) => {
 
 });
 
-
-
-
-
-
     
 //returns total equity of user at time point
 router.get('/userNews/:userId', (req, res, next) => {
@@ -306,10 +302,7 @@ router.get('/userNews/:userId', (req, res, next) => {
             axios.get('http://localhost:5000/userStocks/'+userId)
             .then(result => {
                 //if the user has no stocks, return hotlist news
-                console.log("USER'S STOCKS:");
-                console.log(result.data);
                 if (result.data.length == 0){
-                    console.log("in conditional");
                     res.redirect("/stockInfo/hotNews")
                 }
                 var stocks = result.data;
@@ -318,8 +311,6 @@ router.get('/userNews/:userId', (req, res, next) => {
                 })
             })
         .then(() => {
-             console.log("IN THEN");
-             console.log(news);
             //collects metaData from /stockInfo/metaData/ticker
             Object.keys(news).map(ticker => {
                 promises.push(axios.get('http://localhost:5000/stockInfo/news/'+ticker).then(result => 
@@ -337,8 +328,86 @@ router.get('/userNews/:userId', (req, res, next) => {
         console.log(err)
     )})});
         
-        
 
+  // Update portfolio with equity at current timepoint
+    router.get('/getPortfolioHistory/:userId', (req, res, next) => {
+        const id = req.params.userId;
+        User.findById(id).exec()
+        .then(user => {
+            console.log('From database', user);
+            // If the document with the given id exists
+            if (user) {
+                console.log(user.portfolioHistory);
+                res.status(200).json(user.portfolioHistory);
+            } 
+            else {
+                res.status(404).json({
+                    message: 'No valid entry found for provided ID'
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            }); 
+        })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            }) 
+        });
+ 
+    
+    // Update portfolio with equity at current timepoint
+    router.get('/updatePortfolioHistory/:userId', (req, res, next) => {
+        const id = req.params.userId;
+        axios.get("http://localhost:5000/stockInfo/equity/"+id)
+            .then((result) => {
+                const equity = result.data;
+                var time = new Date();
+                const timeStamp = time.toUTCString();
+                const portfolioHistoryObj = {'timeStamp': timeStamp, 'totalEquity': equity }
+        User.findById(id).exec()
+        .then(user => {
+            console.log('From database', user);
+            // If the document with the given id exists
+            if (user) {
+                user.updateOne( {$push:  { portfolioHistory: [portfolioHistoryObj]}},
+                    function(err, result) {
+                        if (err) {
+                          res.send(err);
+                        } else {
+                          res.send(result);
+                        }
+                      }
+                    );
+                //console.log(user.portfolioHistory);
+            } 
+            else {
+                res.status(404).json({
+                    message: 'No valid entry found for provided ID'
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            }); 
+        })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            }) 
+        })
+    });
+      
+        
     
 
 

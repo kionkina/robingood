@@ -5,6 +5,7 @@ const async = require('async');
 const Stock = require('../models/stock');
 const User = require('../models/User.js');
 
+
 // Gets all stocks for the user with given userId.
 router.get('/:userId', (req, res, next) => {
     const userId = req.params.userId;
@@ -256,72 +257,7 @@ router.delete('/:userId/:stockId', (req, res, next) => {
 });
 
 
-router.get('/portfolioHistory/:userId', (req, res, next) => {
-    const userId = req.params.userId;
-    console.log("here, about to call axios");
-    console.log("updated");
-    axios.get("http://localhost:5000/stockInfo/equity/"+userId)
-        .then((result) => {
-            console.log("this is the result:");
-            console.log(result.data);
-            const timeStamp = Date.now();
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
-    });
-    
-    //updatePortfolioHistory('5e9a55c652f6c0ac6745a9f9');
-    
 
-// Post a stock data when the user initially buys.
-router.post('/updatePortfolio/:userId', (req, res, next) => {
-   /* const id = req.params.userId;
-    console.log(id);
-    console.log("here, about to call axios");
-    console.log("updated");
-    axios.get("http://localhost:5000/stockInfo/equity/"+id)
-        .then((result) => {
-            console.log("this is the result:");
-            console.log(result.data);
-            const equity = result.data;
-            const timeStamp = Date.now();
-            const portfolioHistoryObj = {'timeStamp': timeStamp, 'equity': equity }
-    console.log("id:");
-    console.log(id);
-    /*User.findById(id).exec()
-    .then(user => {
-        console.log('From database', user);
-        // If the document with the given id exists
-        if (user) {
-   
-            //do stuff
-            
-        } 
-        else {
-            res.status(404).json({
-                message: 'No valid entry found for provided ID'
-            })
-        }
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        }); 
-    })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        }) */
-    });
-  
-    
 
 
   
