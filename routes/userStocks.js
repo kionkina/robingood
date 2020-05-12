@@ -108,10 +108,11 @@ function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
 }
 
 
+
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
     console.log("posting the stock")
-    let stock = req.body.stock
+    let stock = req.body.stock;
     const id = req.params.userId;
     console.log(id)
     User.findById(id).exec()
@@ -119,15 +120,6 @@ router.post('/:userId', (req, res, next) => {
             console.log('From database', user);
             // If the document with the given id exists
             if (user) {
-                let cost = stock.buyPrice * stock.quantity;
-                let newBuyingPower = user.buyingPower - cost;
-                
-                const filter = { _id: id };
-                const update = { buyingPower: newBuyingPower };
-
-                // Update portfolioValue.
-                User.findOneAndUpdate(filter, update, { new: true, upsert: true });
-
                 user.stocks.push(stock)
                 user.save()
                     .then(result => {
@@ -141,11 +133,6 @@ router.post('/:userId', (req, res, next) => {
                             res.status(500).json({
                                 error: err
                             });
-                        });
-                        res.status(200).json({
-                            message: 'Handling POST request to /stocks',
-                            createdStock: stock,
-                            user: user
                         });
                     })
                     .catch(err => {
@@ -168,6 +155,7 @@ router.post('/:userId', (req, res, next) => {
         });
         
 });
+    
 
 // Get the stock with the given stockId for the user with given userId.
 router.get('/:userId/:stockId', (req, res, next) => {

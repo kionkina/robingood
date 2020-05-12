@@ -54,9 +54,9 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 });
 
+
 cron.schedule("* * * * *", function() {
-  //update portfolio of user 5e9a55c652f6c0ac6745a9f9
-  axios.get("http://localhost:5000/stockInfo/updatePortfolioHistory/5e9a55c652f6c0ac6745a9f9");
+  axios.get("http://localhost:5000/stockInfo/updateAllPortfolios/");
   console.log("running a task every minute");
 
 });
