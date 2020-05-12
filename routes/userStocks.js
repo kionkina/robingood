@@ -106,6 +106,27 @@ function updateStock(userId, stockId, totalReturn, totalReturnPercentage) {
     User.update({ _id: userId, 'stocks._id': stockId }, { $set: { 'stocks.$.totalReturn': totalReturn, 'stocks.$.totalReturnPercentage': totalReturnPercentage } });
 }
 
+router.get('/portfolioHistory/:userId', (req, res, next) => {
+const userId = req.params.userId;
+console.log("here, about to call axios");
+console.log("updated");
+axios.get("http://localhost:5000/stockInfo/equity/"+userId)
+    .then((result) => {
+        console.log("this is the result:");
+        console.log(result);
+        const timeStamp = Date.now();
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+//updatePortfolioHistory('5e9a55c652f6c0ac6745a9f9');
+
+
 // Post a stock data when the user initially buys.
 router.post('/:userId', (req, res, next) => {
     console.log("posting the stock")
