@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
 import axios from 'axios';
 import '../App.css';
-import {Container,Row,Col} from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
-import StockCard from './StockCard'
-import HotStockCard from './HotStockCard'
+import {Container,Row,Col} from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import StockCard from './StockCard';
+import HotStockCard from './HotStockCard';
+import Article from './Article';
 //todo: promise.all hot stock ticker for price and market cap, pass to hotstockcards
 
 class Home extends Component{
@@ -15,6 +16,7 @@ class Home extends Component{
           userStocks: undefined,
           hotStocks: [],
           hotFiltered: [],
+          news: [],
         }
       }
     componentDidMount(){
@@ -31,10 +33,21 @@ class Home extends Component{
                   user: resb.data
               })
           })
+          axios.get('/stockInfo/userNews/' + this.state.user._id).then(res =>{
+            console.log(res);
+            this.setState({
+                news: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            this.props.history.push(`/error/` + err.status)
+        });
         })
         .catch(function (err) {
           console.log(err);
         });
+
 
         axios.get('/stockinfo/hotStocks')
         .then(res => {
@@ -84,6 +97,7 @@ class Home extends Component{
         .catch(function (err) {
             console.log(err);
         });
+        
     }
 
     handleClick = (ticker) => {
@@ -255,14 +269,22 @@ class Home extends Component{
                     </Row>
                 </Col>        
                 </Row>
-                <Row className="news justify-content-center">
-                <Card className="news-card border-0">
-                    <Card.Header as="h5">Current News</Card.Header>
-                        <Card.Body>
-                            
-                        </Card.Body>
-                    </Card> 
-                </Row>
+                <Row className="news pad-top justify-content-center">
+            <Card className="news-card border-0">
+              <Card.Header as="h5">Current News</Card.Header>
+                <Card.Body className="list-group">
+                {this.state.news[0] ? this.state.news.map((article) => (
+                        <Article  
+                            link={article.url}
+                            title={article.title}
+                            symbols={article.symbols}
+                            summary={article.summary}
+                            image={article.image}/>
+                    )) : ""
+                }
+                </Card.Body>
+            </Card> 
+        </Row>
             </div>
             : <></>
             }

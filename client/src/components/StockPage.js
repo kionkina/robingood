@@ -7,6 +7,7 @@ import EquityCard from './EquityCard';
 import FinancialCard from './FinancialCard';
 import PurchaseCard from './PurchaseCard';
 import CompanyInfoCard from './CompanyInfoCard';
+import Article from './Article';
 import TradingViewWidget from 'react-tradingview-widget';
 
 class StockPage extends Component{
@@ -17,6 +18,7 @@ class StockPage extends Component{
           //user: this.props.user,
           stockInfo: undefined,
           hasStock: [],
+          news: [],
         }
       }
 
@@ -46,7 +48,17 @@ class StockPage extends Component{
                 console.log(errb.response)
                 this.props.history.push(`/error/` + errb.response.status)
             }
+        });
+    axios.get('/stockInfo/news/' + this.props.match.params.ticker).then(res =>{
+            console.log(res);
+            this.setState({
+                news: res.data.news
+            })
         })
+        .catch(err => {
+            console.log(err)
+            this.props.history.push(`/error/` + err.status)
+        });
     }
 
 
@@ -102,8 +114,16 @@ class StockPage extends Component{
         <Row className="news pad-top justify-content-center">
             <Card className="news-card border-0">
               <Card.Header as="h5">Current News</Card.Header>
-                <Card.Body>
-                    
+                <Card.Body className="list-group">
+                    {this.state.news[0] ? this.state.news.map((article) => (
+                        <Article  
+                            link={article.url}
+                            title={article.title}
+                            symbols={article.symbols}
+                            summary={article.summary}
+                            image={article.image}/>
+                    )) : ""
+                }
                 </Card.Body>
             </Card> 
         </Row>
