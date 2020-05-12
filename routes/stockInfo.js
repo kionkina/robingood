@@ -372,7 +372,7 @@ router.get('/userNews/:userId', (req, res, next) => {
                 const portfolioHistoryObj = {'timeStamp': timeStamp, 'totalEquity': equity }
         User.findById(id).exec()
         .then(user => {
-            console.log('From database', user);
+            //console.log('From database', user);
             // If the document with the given id exists
             if (user) {
                 user.updateOne( {$push:  { portfolioHistory: [portfolioHistoryObj]}},
