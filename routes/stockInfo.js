@@ -68,7 +68,7 @@ router.get('/metaData/:ticker', (req, res, next) => {
      }
         )
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -91,7 +91,7 @@ router.get('/stockPerf/:ticker', (req, res, next) =>{
             return dict;
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -320,7 +320,7 @@ router.get('/hotNews', (req, res, next) => {
     
    //combines responses
    Promise.all(promises).then(() => {
-       return res.status(200).json(ret.flat());
+       return res.status(200).json([].concat(...ret));
        }) // end Promise.all(promises).then
 
 .catch(err => 
@@ -347,7 +347,7 @@ router.get('/userNews/:userId', (req, res, next) => {
                 if (result.data.length == 0){
                     res.redirect("/stockInfo/hotNews")
                 }
-                console.log(result);
+                //console.log(result);
                 var stocks = result.data;
                 stocks.map((item, i) =>{
                     tickers.push(item.ticker);
@@ -366,8 +366,8 @@ router.get('/userNews/:userId', (req, res, next) => {
          
         //combines responses
         Promise.all(promises).then(() => {
-            //console.log(news);
-            return res.status(200).json(news);
+            console.log(news);
+            return res.status(200).json([].concat(...news));
             }) // end Promise.all(promises).then
 
     .catch(err => 

@@ -13,7 +13,8 @@ import { AuthContext } from '../context/AuthContext';
 const Routes = props =>{
     //console.log(useContext(AuthContext))
     const {user, isAuthenticated} = useContext(AuthContext);
-    console.log(user)
+    console.log("USER");
+    console.log(user);
     //const {isAuthenticated,user,setIsAuthenticated,setUser} = useContext(AuthContext);
     
     return(
@@ -22,6 +23,7 @@ const Routes = props =>{
                 <Navbar/>
                 {!isAuthenticated && (
                     <Switch>
+                        
                         <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
                         <Route exact path="/stock" component={StockPage}/>
