@@ -6,9 +6,10 @@ import Card from 'react-bootstrap/Card';
 import StockCard from './StockCard';
 import HotStockCard from './HotStockCard';
 import Article from './Article';
-//todo: promise.all hot stock ticker for price and market cap, pass to hotstockcards
+import {AuthContext} from '../context/AuthContext'
 
 class Home extends Component{
+    static contextType = AuthContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -20,7 +21,6 @@ class Home extends Component{
         }
       }
     componentDidMount(){
-        console.log(this.state.user)
         axios.put('/userStocks/update/' + this.state.user._id)
         .then(res => {
           console.log(res);
@@ -29,6 +29,7 @@ class Home extends Component{
           })
           axios.get('/user/' + this.state.user._id)
           .then(resb => {
+              this.context.setUser(resb.data)
               this.setState({
                   user: resb.data
               })

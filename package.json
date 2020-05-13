@@ -17,6 +17,7 @@
     "dotenv": "^8.2.0",
     "fetch": "^1.1.0",
     "mongoose": "^5.9.9",
+    "react-landing-page": "^2.0.2",
     "react-search-box": "^2.0.2",
     "setprototypeof": "^1.2.0",
     "yarn": "^1.22.4"
