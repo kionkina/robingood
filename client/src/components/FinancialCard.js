@@ -11,7 +11,14 @@ class FinancialCard extends Component{
         }
       }
     componentDidMount(){
-        axios.get('/stockinfo/financials/' + this.props.ticker).then(res =>{
+        this.getStockInfo(this.props.ticker)
+    }
+    componentWillReceiveProps(nextProps){
+        this.getStockInfo(this.props.ticker)
+      }
+
+    getStockInfo = (ticker) => {
+        axios.get('/stockinfo/financials/' + ticker).then(res =>{
             console.log(res);
             this.setState({
                 stockFinancials: res.data
@@ -21,7 +28,6 @@ class FinancialCard extends Component{
             console.log(err)
         });
     }
-
     marketCap = (labelValue) => {
 
         return Math.abs(Number(labelValue)) >= 1.0e+12

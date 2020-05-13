@@ -36,7 +36,7 @@ class EquityCard extends Component{
                     Avg. Cost
                 </Row>
                 <Row>
-                    {this.props.stock? this.props.buyPrice : 0}
+                    ${this.props.stock? this.props.stock.buyPrice : 0}
                 </Row>
               </Col>
             </Row>

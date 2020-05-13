@@ -2,8 +2,10 @@ import React,{Component} from 'react';
 import axios from 'axios';
 import '../App.css';
 import {Container,Row,Col} from 'react-bootstrap'
+import {AuthContext} from '../context/AuthContext'
 
 class PurchaseCard extends Component{
+    static contextType = AuthContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +20,15 @@ class PurchaseCard extends Component{
     componentDidMount(){
         console.log(this.props.user);
         let ticker = this.props.stockInfo.ticker;
-        let userstocks = this.props.user.stocks;
+        let userstocks = this.context.user.stocks;
+        this.setState({
+            stock: userstocks.filter(stock => ticker === stock.ticker)
+        })
+    }
+    componentWillReceiveProps(){
+        console.log(this.props.user);
+        let ticker = this.props.stockInfo.ticker;
+        let userstocks = this.context.user.stocks;
         this.setState({
             stock: userstocks.filter(stock => ticker === stock.ticker)
         })
