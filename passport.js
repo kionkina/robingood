@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('./models/User');
 
 const cookieExtractor = req =>{
@@ -16,7 +17,7 @@ passport.use(new JwtStrategy({
     jwtFromRequest : cookieExtractor,
     secretOrKey : "NoobCoder"
 },(payload,done)=>{
-    User.findByOne({email : payload.email},(err,user)=>{
+    User.findOne({email : payload.email},(err,user)=>{
         if(err)
             return done(err,false);
         if(user)
