@@ -14,23 +14,23 @@ class FinancialCard extends Component{
             <Row>
               <Col>
                 <Row className="semi-title">
-                    Opening Price
+                    Free Cash Flow
                 </Row>
                 <Row>
-                    $33.45
+                    ${this.marketCap(this.props.stockFinancials.freeCashFlow)}
                 </Row>
               </Col>
               <Col>
                 <Row className="semi-title">
-                    Volume
+                    P/B Value
                 </Row>
                 <Row>
-                    234,034
+                    {this.props.stockFinancials.priceToBookValue}
                 </Row>
               </Col>
               <Col>
                 <Row className="semi-title">
-                    Metric
+                    P/S Ratio
                 </Row>
                 <Row>
                     135.43
@@ -43,7 +43,7 @@ class FinancialCard extends Component{
                     Market Cap.
                 </Row>
                 <Row>
-                    1.24 M
+                    {this.marketCap(this.props.stockFinancials.marketCapitalization)}
                 </Row>
               </Col>
               <Col>
@@ -51,7 +51,7 @@ class FinancialCard extends Component{
                     P/E Ratio
                 </Row>
                 <Row>
-                    <span> 4.43 </span>
+                    <span> {this.props.stockFinancials.priceToEarningsRatio} </span>
                 </Row>
               </Col>
               <Col>
@@ -59,7 +59,7 @@ class FinancialCard extends Component{
                     Debt/Equity
                 </Row>
                 <Row>
-                    <span> 7.36 </span>
+                    <span> {this.props.stockFinancials.debtToEquityRatio} </span>
                 </Row>
               </Col>
 
