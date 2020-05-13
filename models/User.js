@@ -13,7 +13,8 @@ const UserSchema = new mongoose.Schema({
   portfolioHistory: { type:[portfolioHistory.schema] },
   buyingPower: { type: Number },
   portfolioValue: { type: Number },
-  portfolioPerformance : { type: Number }
+  portfolioPerformance : { type: Number },
+  token: { type: String}
 });
 
 UserSchema.pre('save',function(next){

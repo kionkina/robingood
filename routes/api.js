@@ -43,6 +43,8 @@ userRouter.post('/login',passport.authenticate('local',{session : false}),(req,r
         .then(user => {
             // If the document with the given id exists
             if (user) {
+                user.token = token;
+                user.save();
                 res.status(200).json({isAuthenticated : true,user : user});
             } else {
                 res.status(404).json({

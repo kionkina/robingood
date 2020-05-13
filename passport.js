@@ -27,7 +27,6 @@ passport.use(new JwtStrategy({
     });
 }));
 
-
 // authenticated local strategy using username and password
 passport.use(new LocalStrategy({usernameField:"email", passwordField:"password"}, function(email,password,done) {
     User.findOne({email},(err,user)=>{
