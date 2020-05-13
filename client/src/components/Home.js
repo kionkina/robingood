@@ -67,7 +67,7 @@ class Home extends Component{
                                 hotstocksb.push({...resb.data, ...resc.data, ...resd.data});
                             })
                             .catch(errd => {
-                                
+                                hotstocksb.push({...resb.data, ...resc.data});
                             })
                         )               
                         //console.log(hotstocks)
@@ -104,7 +104,7 @@ class Home extends Component{
         if(ticker === "portfolio"){
             this.props.history.push({
                 pathname: `/portfolio`,
-                state: {user: this.state.user}
+                state: {user: this.state.user, stocks:this.state.userStocks}
             })
         }
         else{
@@ -265,9 +265,9 @@ class Home extends Component{
                                     price={eachStock.lastPrice}
                                     marketCap={this.marketCap(eachStock.marketCap)}
                                     tick={eachStock.ticker}
-                                    dailyChange={eachStock.priceChange}
+                                    dailyChange={eachStock.priceChange ? eachStock.priceChange : "NaN"}
                                     profit = {eachStock.priceChange > 0}
-                                    dailyPerc = {eachStock.dailyPercent}
+                                    dailyPerc = {eachStock.dailyPercent ? eachStock.dailyPercent : "NaN"}
                                     industry = {eachStock.industry.substring(0,13) + "."}></HotStockCard>
                                     </div>
                                 )) : ""
