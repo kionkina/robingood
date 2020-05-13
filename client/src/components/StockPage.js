@@ -22,9 +22,18 @@ class StockPage extends Component{
         }
       }
 
+      componentWillReceiveProps(nextProps){
+        if(this.props.location.state.stockticker != nextProps.location.state.stockticker){
+            this.getStockInfo(nextProps.location.state.stockticker)
+        }
+      }
     componentDidMount(){
-        axios.get('/stockInfo/metaData/' + this.props.match.params.ticker).then(resb => {
-            axios.get('/stockInfo/stock/' + this.props.match.params.ticker).then(resc => {
+        this.getStockInfo(this.props.match.params.ticker)
+    }
+
+    getStockInfo = (ticker) => {
+        axios.get('/stockInfo/metaData/' + ticker).then(resb => {
+            axios.get('/stockInfo/stock/' + ticker).then(resc => {
                 let stockinfo = {...resb.data, ...resc.data}
                 console.log(stockinfo)
                 let hasstock = this.props.location.state.user.stocks.filter(stock => stock.ticker === stockinfo.ticker)
@@ -49,7 +58,7 @@ class StockPage extends Component{
                 this.props.history.push(`/error/` + errb.response.status)
             }
         });
-    axios.get('/stockInfo/news/' + this.props.match.params.ticker).then(res =>{
+    axios.get('/stockInfo/news/' + ticker).then(res =>{
             console.log(res);
             this.setState({
                 news: res.data.news
@@ -60,8 +69,6 @@ class StockPage extends Component{
             this.props.history.push(`/error/` + err.status)
         });
     }
-
-
 
     render(){
         return(
