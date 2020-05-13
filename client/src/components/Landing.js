@@ -8,6 +8,9 @@ class Landing extends React.Component{
     componentDidMount(){
         this.props.history.push('/');
     }
+    handleClick = () => {
+      this.props.history.push("/register")
+    }
   render () {
     return (
       <Provider>
@@ -18,7 +21,7 @@ class Landing extends React.Component{
       >
           <Heading>RobinGood</Heading>
           <Subhead>Investing made easy</Subhead>
-          <CallToAction href="/getting-started" mt={3}>Get Started</CallToAction>
+          <CallToAction onClick={this.handleClick} mt={3}>Get Started</CallToAction>
           <ScrollDownIndicator/>
       </Hero>
     </Provider>
