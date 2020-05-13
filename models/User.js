@@ -13,37 +13,32 @@ const UserSchema = new mongoose.Schema({
   portfolioHistory: { type:[portfolioHistory.schema] },
   buyingPower: { type: Number },
   portfolioValue: { type: Number },
-  portfolioPerformance : { type: Number }
+  portfolioPerformance : { type: Number },
+  token: { type: String}
 });
 
-UserSchema.pre('save', function(next) {
-  // Check if document is new or a new password has been set
-  if (this.isNew || this.isModified('password')) {
-    // Saving reference to this because of changing scopes
-    const document = this;
-    bcrypt.hash(document.password, saltRounds,
-      function(err, hashedPassword) {
-      if (err) {
-        next(err);
-      }
-      else {
-        document.password = hashedPassword;
+UserSchema.pre('save',function(next){
+    if(!this.isModified('password'))
+        return next();
+    bcrypt.hash(this.password,10,(err,passwordHash)=>{
+        if(err)
+            return next(err);
+        this.password = passwordHash;
         next();
-      }
     });
-  } else {
-    next();
-  }
 });
 
-UserSchema.methods.isCorrectPassword = function(password, callback){
-    bcrypt.compare(password, this.password, function(err, same) {
-      if (err) {
-        callback(err);
-      } else {
-        callback(err, same);
-      }
+UserSchema.methods.comparePassword = function(password,cb){
+    bcrypt.compare(password,this.password,(err,isMatch)=>{
+        if(err)
+            return cb(err);
+        else{
+            if(!isMatch)
+                return cb(null,isMatch);
+            return cb(null,this);
+        }
     });
-  }
+}
+
 
 module.exports = mongoose.model('User', UserSchema);

@@ -17,6 +17,7 @@ const Login = props => {
         AuthService.login(user).then(data=>{
             const { isAuthenticated,user,message} = data;
             if(isAuthenticated){
+                console.log('USER I AM USER PLEASE I AM USER:' + user)
                 authContext.setUser(user);
                 authContext.setIsAuthenticated(isAuthenticated);
                 props.history.push('/');
