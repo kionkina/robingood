@@ -55,6 +55,8 @@ router.get('/metaData/:ticker', (req, res, next) => {
         dict['name'] = result.data.name;
         dict['industry'] = result.data.industry;
         dict['ceo'] = result.data.ceo;
+        dict['description'] = result.data.description;
+        dict['listdate'] = result.data.listdate;
         dict['similar'] = result.data.similar;
         dict['tags'] = result.data.tags;
 

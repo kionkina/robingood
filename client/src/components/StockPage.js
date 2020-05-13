@@ -9,9 +9,10 @@ import PurchaseCard from './PurchaseCard';
 import CompanyInfoCard from './CompanyInfoCard';
 import Article from './Article';
 import TradingViewWidget from 'react-tradingview-widget';
+import {AuthContext} from '../context/AuthContext'
 
 class StockPage extends Component{
-
+    static contextType = AuthContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -36,7 +37,9 @@ class StockPage extends Component{
             axios.get('/stockInfo/stock/' + ticker).then(resc => {
                 let stockinfo = {...resb.data, ...resc.data}
                 console.log(stockinfo)
-                let hasstock = this.props.location.state.user.stocks.filter(stock => stock.ticker === stockinfo.ticker)
+                let hasstock = this.context.user.stocks.filter(stock => stock.ticker === stockinfo.ticker)
+                console.log(hasstock)
+                console.log("hello")
                 this.setState({
                     stockInfo: stockinfo,
                     hasStock: hasstock
