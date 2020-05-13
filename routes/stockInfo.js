@@ -66,7 +66,7 @@ router.get('/metaData/:ticker', (req, res, next) => {
      }
         )
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -89,7 +89,7 @@ router.get('/stockPerf/:ticker', (req, res, next) =>{
             return dict;
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.status(500).json({
                 error: err
             });

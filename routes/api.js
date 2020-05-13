@@ -5,8 +5,6 @@ const passportConfig = require('../passport');
 const JWT = require('jsonwebtoken');
 const User = require('../models/User');
 
-
-
 const signToken = userID =>{
     return JWT.sign({
         iss : "NoobCoder",
@@ -51,24 +49,6 @@ userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res
     res.clearCookie('access_token');
     res.json({user:{email : ""},success : true});
 });
-
-userRouter.post('/todo',passport.authenticate('jwt',{session : false}),(req,res)=>{
-    const todo = new Todo(req.body);
-    todo.save(err=>{
-        if(err)
-            res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
-        else{
-            req.user.todos.push(todo);
-            req.user.save(err=>{
-                if(err)
-                    res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
-                else
-                    res.status(200).json({message : {msgBody : "Successfully created todo", msgError : false}});
-            });
-        }
-    })
-});
-
 
 userRouter.get('/authenticated',passport.authenticate('jwt',{session : false}),(req,res)=>{
     const {email} = req.user;

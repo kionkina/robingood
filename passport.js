@@ -16,7 +16,7 @@ passport.use(new JwtStrategy({
     jwtFromRequest : cookieExtractor,
     secretOrKey : "NoobCoder"
 },(payload,done)=>{
-    User.findById({_id : payload.sub},(err,user)=>{
+    User.findByOne({email : payload.email},(err,user)=>{
         if(err)
             return done(err,false);
         if(user)
@@ -26,8 +26,9 @@ passport.use(new JwtStrategy({
     });
 }));
 
+
 // authenticated local strategy using username and password
-passport.use(new LocalStrategy((email,password,done)=>{
+passport.use(new LocalStrategy({usernameField:"email", passwordField:"password"}, function(email,password,done) {
     User.findOne({email},(err,user)=>{
         // something went wrong with database
         if(err)

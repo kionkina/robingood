@@ -16,47 +16,27 @@ const UserSchema = new mongoose.Schema({
   portfolioPerformance : { type: Number }
 });
 
-UserSchema.pre('save', function(next) {
-  // Check if document is new or a new password has been set
-  if (this.isNew || this.isModified('password')) {
-    // Saving reference to this because of changing scopes
-    const document = this;
-    bcrypt.hash(document.password, saltRounds,
-      function(err, hashedPassword) {
-      if (err) {
-        next(err);
-      }
-      else {
-        document.password = hashedPassword;
-        next();
-      }
-    });
-  } else {
-    next();
-  }
-});
-
 UserSchema.pre('save',function(next){
-  if(!this.isModified('password'))
-      return next();
-  bcrypt.hash(this.password,10,(err,passwordHash)=>{
-      if(err)
-          return next(err);
-      this.password = passwordHash;
-      next();
-  });
+    if(!this.isModified('password'))
+        return next();
+    bcrypt.hash(this.password,10,(err,passwordHash)=>{
+        if(err)
+            return next(err);
+        this.password = passwordHash;
+        next();
+    });
 });
 
 UserSchema.methods.comparePassword = function(password,cb){
-  bcrypt.compare(password,this.password,(err,isMatch)=>{
-      if(err)
-          return cb(err);
-      else{
-          if(!isMatch)
-              return cb(null,isMatch);
-          return cb(null,this);
-      }
-  });
+    bcrypt.compare(password,this.password,(err,isMatch)=>{
+        if(err)
+            return cb(err);
+        else{
+            if(!isMatch)
+                return cb(null,isMatch);
+            return cb(null,this);
+        }
+    });
 }
 
 
