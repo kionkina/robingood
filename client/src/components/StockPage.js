@@ -103,7 +103,7 @@ class StockPage extends Component{
                     }            
             </Col>
             <Col md="4">
-                   <FinancialCard /> 
+                   <FinancialCard ticker={this.props.match.params.ticker}/> 
             </Col>
             <Col md="4">   
                     <CompanyInfoCard stockInfo={this.state.stockInfo}/>
