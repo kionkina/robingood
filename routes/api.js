@@ -69,11 +69,38 @@ userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res
     res.json({user:{email : ""},success : true});
 });
 
-// THIS IS ALWAYS RETURNING 401
+
+/*
 userRouter.get('/authenticated',passport.authenticate('jwt',{session : false}),(req,res)=>{
+    console.log(req);
     const {email} = req.user;
     res.status(200).json({isAuthenticated : true, user : {email}});
-});
+});*/
+
+
+
+// THIS IS ALWAYS RETURNING 401
+userRouter.get('/authenticated', (req,res) =>{
+    
+    const rawCookie = req.headers.cookie;
+    console.log("cookie:");
+    console.log(rawCookie);
+    var rawCookieParams = rawCookie.split("=");
+    var token = rawCookieParams[1];
+    User.findOne({token: token}, (err,user)=>{
+        if(user){
+            console.log("FOUND USER FROM TOKEN");
+            res.status(200).json({isAuthenticated : true,user : user});
+        }
+          // something went wrong with database
+          else{
+            res.status(401);
+          }
+         });
+
+        res.status(401);
+    });
+
 
 
 module.exports = userRouter;

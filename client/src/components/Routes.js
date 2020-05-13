@@ -23,7 +23,7 @@ const Routes = props =>{
                 <Navbar/>
                 {!isAuthenticated && (
                     <Switch>
-                        <Route path="/" component={Login}></Route>
+                        
                         <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
                         <Route exact path="/stock" component={StockPage}/>
