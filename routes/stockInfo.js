@@ -345,7 +345,7 @@ router.get('/userNews/:userId', (req, res, next) => {
                 if (result.data.length == 0){
                     res.redirect("/stockInfo/hotNews")
                 }
-                console.log(result);
+                //console.log(result);
                 var stocks = result.data;
                 stocks.map((item, i) =>{
                     tickers.push(item.ticker);
@@ -364,9 +364,8 @@ router.get('/userNews/:userId', (req, res, next) => {
          
         //combines responses
         Promise.all(promises).then(() => {
-            console.log("yoteaa")
-            console.log(news);
-            return res.status(200).json(news[0].flat());
+            //console.log(news);
+            return res.status(200).json(news.flat());
             }) // end Promise.all(promises).then
 
     .catch(err => 

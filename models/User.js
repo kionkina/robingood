@@ -36,14 +36,28 @@ UserSchema.pre('save', function(next) {
   }
 });
 
-UserSchema.methods.isCorrectPassword = function(password, callback){
-    bcrypt.compare(password, this.password, function(err, same) {
-      if (err) {
-        callback(err);
-      } else {
-        callback(err, same);
+UserSchema.pre('save',function(next){
+  if(!this.isModified('password'))
+      return next();
+  bcrypt.hash(this.password,10,(err,passwordHash)=>{
+      if(err)
+          return next(err);
+      this.password = passwordHash;
+      next();
+  });
+});
+
+UserSchema.methods.comparePassword = function(password,cb){
+  bcrypt.compare(password,this.password,(err,isMatch)=>{
+      if(err)
+          return cb(err);
+      else{
+          if(!isMatch)
+              return cb(null,isMatch);
+          return cb(null,this);
       }
-    });
-  }
+  });
+}
+
 
 module.exports = mongoose.model('User', UserSchema);

@@ -1,3 +1,4 @@
+import { AuthContext } from "../context/AuthContext";
 
 export default {
     login : user =>{
@@ -10,10 +11,14 @@ export default {
                 'Content-Type' : 'application/json'
             }
         }).then(res => {
-            // if(res.status !== 401)
+             if(res.status !== 401){
+                console.log(res.json().then(data => data));
                 return res.json().then(data => data);
-            // else
-            //     return { isAuthenticated : false, user : {email : "",role : ""}};
+             }
+             else
+             {  console.log("default case");
+                 return { isAuthenticated : false, user : {email : "",role : ""}};
+             }
         })
         .catch(err => {
             console.log(err)
@@ -38,12 +43,12 @@ export default {
                 .then(data => data);
     },
     isAuthenticated : ()=>{
-        return fetch('/api/authenticated')
+        return fetch('http://localhost:5000/api/authenticated')
                 .then(res=>{
-                    // if(res.status !== 401)
-                    //     return res.json().then(data => data);
-                    // else
-                        return { isAuthenticated : false, user : {email : "",role : ""}};
+                    if(res.status !== 401)
+                        return res.json().then(data => data);
+                    else
+                        return { isAuthenticated : false, user : {username : "",role : ""}};
                 });
     }
 
