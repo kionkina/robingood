@@ -364,9 +364,8 @@ router.get('/userNews/:userId', (req, res, next) => {
          
         //combines responses
         Promise.all(promises).then(() => {
-            console.log("yoteaa")
             console.log(news);
-            return res.status(200).json(news[0].flat());
+            return res.status(200).json(news.flat());
             }) // end Promise.all(promises).then
 
     .catch(err => 

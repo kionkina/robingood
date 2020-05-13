@@ -120,7 +120,7 @@ router.post('/:userId', (req, res, next) => {
                 user.stocks.push(stock)
                 user.save()
                     .then(result => {
-                        User.update({ _id: userId }, {$inc: {'buyingPower': req.body.total}})
+                        User.update({ _id: id }, {$inc: {'buyingPower': req.body.total}})
                         .exec()
                         .then(result => {
                             res.status(200).json(result);
