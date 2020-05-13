@@ -1,129 +1,79 @@
 const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
-const secret = 'mysecretsshhh';
-// Import our User schema
-const User = require('../models/User.js');
-const withAuth = require('./middleware');
+const userRouter = express.Router();
+const passport = require('passport');
+const passportConfig = require('../passport');
+const JWT = require('jsonwebtoken');
+const User = require('../models/User');
 
-// Gets all users
-router.get('/', (req, res, next) => {
-  User.find()
-    .exec()
-    .then(docs => {
-      console.log(docs);
-      // if (docs.length >= 0) {
-      res.status(200).json(docs);
-      // }
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
+
+
+const signToken = userID =>{
+    return JWT.sign({
+        iss : "NoobCoder",
+        sub : userID
+    },"NoobCoder",{expiresIn : "1h"});
+}
+
+userRouter.post('/register',(req,res)=>{
+    const { email, password } = req.body;
+    User.findOne({email},(err,user)=>{
+        if(err)
+            res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
+        if(user)
+            res.status(400).json({message : {msgBody : "Username is already taken", msgError: true}});
+        else{
+            const newUser = new User({email,password});
+            newUser.save(err=>{
+                if(err)
+                    res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
+                else
+                    res.status(201).json({message : {msgBody : "Account successfully created", msgError: false}});
+            });
+        }
     });
 });
 
-// POST route to register a user
-router.post('/register', function (req, res) {
-  const { email, password } = req.body;
-
-  // Hard-coded arbitrary number
-  const buyingPower = 300000;
-
-  const user = new User({
-    email,
-    password, 
-    buyingPower: buyingPower
-  });
-
-  user.save(function (err) {
-    if (err) {
-      res.status(500)
-        .json({ message: { msgError: true, msgBody: "Error registering new user please try again." } });
-    } else {
-      res.status(200).json({
-        message: { msgError: false, msgBody: "Successfully registered!" },
-        createdUser: user
-      });
+userRouter.post('/login',passport.authenticate('local',{session : false}),(req,res)=>{
+    console.log("LOGIN");
+    if(req.isAuthenticated()){
+      console.log("authenticated");
+       const {_id,email} = req.user;
+       const token = signToken(_id);
+       res.cookie('access_token',token,{httpOnly: true, sameSite:true}); 
+       res.status(200).json({isAuthenticated : true,user : {email}});
     }
-  });
+    else{
+      console.log("not authenticated");
+    }
 });
 
+userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res)=>{
+    res.clearCookie('access_token');
+    res.json({user:{email : ""},success : true});
+});
 
-/*
-given an email and password, 
-finds a User with the given email 
-and verify that the given password is correct
-If pass is correct, we issue a signed token to the requester
-*/
-router.post('/login', function (req, res) {
-  const { email, password } = req.body
-  User.findOne({ email }, function (err, user) {
-    if (err) {
-      console.error(err);
-      res.status(500)
-        .json({
-          message: { msgError: true, msgBody: 'Internal error please try again' }
-        });
-    } else if (!user) {
-      res.status(401)
-        .json({
-          message: { msgError: true, msgBody: 'Incorrect email or password' }
-        });
-    } else {
-      user.isCorrectPassword(password, function (err, same) {
-        if (err) {
-          res.status(500)
-            .json({
-              message: { msgError: true, msgBody: 'Internal error please try again' }
-            });
-        } else if (!same) {
-          res.status(401)
-            .json({
-              message: { msgError: true, msgBody: 'Incorrect email or password' }
-            });
-        } else {
-          // issue a signed token to the requester
-          // const payload = { email };
-          // const token = jwt.sign(payload, secret, {
-          //   expiresIn: '1h'
-          // });
-          // console.log("token:" + token);
-          // console.log("ADDING COOKIE TO RES!");
-          // res.cookie('token', token,  {httpOnly: false });
-
-          res.status(200)
-            .json({
-              isAuthenticated: true,
-              user: user,
-              message: { msgError: false, msgBody: "Success" }
+userRouter.post('/todo',passport.authenticate('jwt',{session : false}),(req,res)=>{
+    const todo = new Todo(req.body);
+    todo.save(err=>{
+        if(err)
+            res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
+        else{
+            req.user.todos.push(todo);
+            req.user.save(err=>{
+                if(err)
+                    res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
+                else
+                    res.status(200).json({message : {msgBody : "Successfully created todo", msgError : false}});
             });
         }
-      });
-    }
-  });
+    })
 });
 
-router.post('/logout', function (req, res) {
-  res.status(200)
-    .json({});
-})
 
-
-
-/*
-router.get('/secret', withAuth, function(req, res) {
-  res.send('The password is potato');
+userRouter.get('/authenticated',passport.authenticate('jwt',{session : false}),(req,res)=>{
+    const {email} = req.user;
+    res.status(200).json({isAuthenticated : true, user : {email}});
 });
-*/
-
-// router.get('/checkToken', withAuth, function(req, res) {
-//   console.log("CHECKING TOKEN...");
-
-//     res.sendStatus(200);
-// });
 
 
-
-module.exports = router;
+module.exports = userRouter;

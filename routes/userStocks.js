@@ -13,7 +13,7 @@ router.get('/:userId', (req, res, next) => {
         .then(user => {
             // If the document with the given id exists
             if (user) {
-                console.log(user.stocks)
+                //console.log(user.stocks)
                 res.status(200).json(user.stocks);
             } else {
                 res.status(404).json({
