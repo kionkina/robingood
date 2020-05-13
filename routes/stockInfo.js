@@ -120,6 +120,25 @@ router.get('/stock/:ticker', (req, res, next) => {
         });
 });
 
+//Gets most recent financials for symbol 
+router.get('/financials/:ticker', (req, res, next) => {
+    const ticker = req.params.ticker;
+    axios.get('https://api.polygon.io/v2/reference/financials/' + ticker, {
+        params: {
+            apiKey: process.env.API_KEY,
+        }
+    })
+    .then(result => {
+        res.status(200).json(result.data.results[0]);
+     })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
 //Gets news articles for ticker
 /*
 [ { symbols: ,
@@ -345,8 +364,9 @@ router.get('/userNews/:userId', (req, res, next) => {
          
         //combines responses
         Promise.all(promises).then(() => {
+            console.log("yoteaa")
             console.log(news);
-            return res.status(200).json(news.flat());
+            return res.status(200).json(news[0].flat());
             }) // end Promise.all(promises).then
 
     .catch(err => 
