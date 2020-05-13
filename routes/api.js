@@ -20,7 +20,9 @@ userRouter.post('/register',(req,res)=>{
         if(user)
             res.status(400).json({message : {msgBody : "Username is already taken", msgError: true}});
         else{
-            const newUser = new User({email,password});
+            const newUser = new User({email,password, buyingPower: 300000,  portfolioValue: 300000,  portfolioPerformance: 0},
+               );
+            
             newUser.save(err=>{
                 if(err)
                     res.status(500).json({message : {msgBody : "Error has occured", msgError: true}});
@@ -70,19 +72,20 @@ userRouter.get('/logout',passport.authenticate('jwt',{session : false}),(req,res
 });
 
 
-/*
 userRouter.get('/authenticated',passport.authenticate('jwt',{session : false}),(req,res)=>{
     console.log(req);
     const {email} = req.user;
     res.status(200).json({isAuthenticated : true, user : {email}});
-});*/
+});
 
-
-
+/*
 // THIS IS ALWAYS RETURNING 401
-userRouter.get('/authenticated', (req,res) =>{
-    
+userRouter.get('/authenticatedd', (req,res) =>{
     const rawCookie = req.headers.cookie;
+    if (!rawCookie){
+        res.status(401);
+    }
+    else {
     console.log("cookie:");
     console.log(rawCookie);
     var rawCookieParams = rawCookie.split("=");
@@ -99,7 +102,9 @@ userRouter.get('/authenticated', (req,res) =>{
          });
 
         res.status(401);
-    });
+        }    
+    });*/
+
 
 
 

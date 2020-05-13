@@ -318,7 +318,7 @@ router.get('/hotNews', (req, res, next) => {
     
    //combines responses
    Promise.all(promises).then(() => {
-       return res.status(200).json(ret.flat());
+       return res.status(200).json([].concat(...ret));
        }) // end Promise.all(promises).then
 
 .catch(err => 
@@ -364,8 +364,8 @@ router.get('/userNews/:userId', (req, res, next) => {
          
         //combines responses
         Promise.all(promises).then(() => {
-            //console.log(news);
-            return res.status(200).json(news.flat());
+            console.log(news);
+            return res.status(200).json([].concat(...news));
             }) // end Promise.all(promises).then
 
     .catch(err => 

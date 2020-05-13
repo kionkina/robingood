@@ -6,8 +6,10 @@ const User = require('./models/User');
 
 const cookieExtractor = req =>{
     let token = null;
-    if(req && req.cookies){
-        token = req.cookies["access_token"];
+    const rawCookie = req.headers.cookie;
+    if(req && rawCookie){
+        var rawCookieParams = rawCookie.split("=");
+        token = rawCookieParams[1];
     }
     return token;
 }
