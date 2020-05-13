@@ -101,10 +101,18 @@ class Home extends Component{
     }
 
     handleClick = (ticker) => {
-        this.props.history.push({
-            pathname: `/stock/` + ticker,
-            state: {user: this.state.user}
-        })
+        if(ticker === "portfolio"){
+            this.props.history.push({
+                pathname: `/portfolio`,
+                state: {user: this.state.user}
+            })
+        }
+        else{
+            this.props.history.push({
+                pathname: `/stock/` + ticker,
+                state: {user: this.state.user}
+            })
+        }
     }
     handleChange = (e) => {
         let temp = this.state.hotStocks
@@ -153,7 +161,7 @@ class Home extends Component{
                     <Col className="custom-col" sm>
                         <Row className="balance-row">
                         <Container className="balance">
-                            <div className="wrapper"> 
+                            <div className="wrapper" onClick={() => this.handleClick("portfolio")}> 
                                 <Row className="balance-row">
                                     <Col>
                                     <div className="stock-heading"> Porfolio Value <svg class="bi bi-question-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
